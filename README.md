@@ -1,8 +1,10 @@
-## 🚀 Send mails to Gmail in seconds
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
+
+## 🚀 Send mails to Gmail in seconds and test you html template
 
 This guide walks you through configuring and running a simple Python script to send HTML emails via Gmail SMTP in just a few seconds. Perfect for quick notifications, alerts, or any automated email tasks.
 
----
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
 ### 🔧 Prerequisites
 
@@ -11,7 +13,7 @@ This guide walks you through configuring and running a simple Python script to s
 3. Basic familiarity with the terminal/command line.
 4. Your HTML email template (`email_template.html`).
 
----
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
 ### 🔐 Generating a Gmail App Password
 
@@ -72,7 +74,7 @@ Before you start, you need a secure App Password to authenticate with Gmail. Fol
 
    You should see `✅ Email sent—check your Gmail inbox now!` in your console.
 
----
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
 ### 💡 How It Works
 
@@ -82,7 +84,7 @@ Before you start, you need a secure App Password to authenticate with Gmail. Fol
 4. **Connect & Authenticate**: Opens an SMTP connection to `smtp.gmail.com:587`, starts TLS, and logs in.
 5. **Send**: Dispatches the email and closes the connection automatically.
 
----
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
 ### 🤔 Troubleshooting
 
@@ -90,7 +92,7 @@ Before you start, you need a secure App Password to authenticate with Gmail. Fol
 * **Authentication Failed**: Double-check your `APP_PASSWORD`. Regular Gmail passwords won’t work if 2FA is enabled.
 * **HTML Not Rendering**: Confirm your template is valid HTML and includes proper `<html>`, `<body>`, etc.
 
----
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
 ### 📈 Next Steps
 
