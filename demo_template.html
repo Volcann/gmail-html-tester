@@ -1,640 +1,297 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Invoice</title>
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --primary: #284574;
-      --primary-dark: #1e3a5f;
-      --secondary: #3b82f6;
-      --bg: #f4f7fb;
-      --card: #ffffff;
-      --muted: #6b7280;
-      --text: #111827;
-      --border: #e5e7eb;
-      --soft: #f9fafb;
-      --success-bg: #dcfce7;
-      --success-text: #166534;
-      --warning-bg: #fef3c7;
-      --warning-text: #92400e;
-      --danger-bg: #fee2e2;
-      --danger-text: #991b1b;
-    }
-
-    @page {
-      margin: 0;
-    }
-
-    body {
-      font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      padding: 40px;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
-
-    .container {
-      max-width: 980px;
-      margin: auto;
-      background: var(--card);
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow:
-        0 10px 25px rgba(0,0,0,0.08),
-        0 4px 12px rgba(0,0,0,0.04);
-    }
-
-    .header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      padding: 42px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .header::before {
-      content: "";
-      position: absolute;
-      top: -100px;
-      right: -100px;
-      width: 260px;
-      height: 260px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 50%;
-    }
-
-    .header::after {
-      content: "";
-      position: absolute;
-      bottom: -120px;
-      left: -80px;
-      width: 240px;
-      height: 240px;
-      background: rgba(255,255,255,0.04);
-      border-radius: 50%;
-    }
-
-    .header-content {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      justify-content: space-between;
-      gap: 40px;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      flex: 1;
-      min-width: 250px;
-    }
-
-    .logo {
-      width: 58px;
-      height: 58px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 18px;
-      font-size: 22px;
-      font-weight: 800;
-      backdrop-filter: blur(10px);
-      overflow: hidden;
-    }
-
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .brand h1 {
-      font-size: 34px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
-    }
-
-    .brand p {
-      font-size: 14px;
-      opacity: 0.88;
-      margin-bottom: 6px;
-    }
-
-    .invoice-meta {
-      min-width: 280px;
-      text-align: right;
-    }
-
-    .invoice-meta h2 {
-      font-size: 34px;
-      margin-bottom: 18px;
-      font-weight: 800;
-    }
-
-    .meta-grid {
-      display: grid;
-      gap: 12px;
-    }
-
-    .meta-item {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      padding: 12px 16px;
-      border-radius: 14px;
-      backdrop-filter: blur(8px);
-    }
-
-    .meta-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      opacity: 0.75;
-      margin-bottom: 5px;
-    }
-
-    .meta-value {
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      margin-top: 18px;
-      letter-spacing: 0.5px;
-    }
-
-    .status.paid {
-      background: var(--success-bg);
-      color: var(--success-text);
-    }
-
-    .status.pending {
-      background: var(--warning-bg);
-      color: var(--warning-text);
-    }
-
-    .status.overdue {
-      background: var(--danger-bg);
-      color: var(--danger-text);
-    }
-
-    .section {
-      padding: 42px;
-    }
-
-    .top-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 28px;
-      margin-bottom: 40px;
-    }
-
-    .block-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      margin-bottom: 14px;
-    }
-
-    .card {
-      background: var(--soft);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 24px;
-      transition: 0.25s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-    }
-
-    .card strong {
-      display: block;
-      font-size: 18px;
-      margin-bottom: 12px;
-    }
-
-    .card div {
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #374151;
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 720px;
-    }
-
-    thead {
-      background: #eef2ff;
-    }
-
-    th {
-      padding: 18px;
-      text-align: left;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #374151;
-    }
-
-    td {
-      padding: 20px 18px;
-      border-top: 1px solid var(--border);
-      font-size: 14px;
-      vertical-align: top;
-    }
-
-    tbody tr {
-      transition: background 0.2s ease;
-    }
-
-    tbody tr:hover {
-      background: #f9fafb;
-    }
-
-    td:last-child,
-    th:last-child {
-      text-align: right;
-    }
-
-    .item-title {
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .item-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .bottom-grid {
-      margin-top: 36px;
-      display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 28px;
-      align-items: start;
-    }
-
-    .notes-card,
-    .payment-card,
-    .summary-box {
-      background: var(--soft);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 26px;
-    }
-
-    .notes-card p,
-    .payment-card p {
-      margin-bottom: 10px;
-      font-size: 14px;
-      line-height: 1.7;
-      color: #4b5563;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 14px;
-    }
-
-    .summary-row:last-child {
-      border-bottom: none;
-    }
-
-    .summary-row.total {
-      margin-top: 14px;
-      padding: 18px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #111827, #1f2937);
-      color: white;
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .summary-row.total span:last-child {
-      font-size: 22px;
-    }
-
-    .footer {
-      background: var(--soft);
-      border-top: 1px solid var(--border);
-      padding: 32px 42px;
-    }
-
-    .footer-grid {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .footer-left h4 {
-      margin-bottom: 8px;
-      font-size: 16px;
-    }
-
-    .footer-left p {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .footer-right {
-      text-align: right;
-    }
-
-    .footer-right p {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f172a;
-        --card: #111827;
-        --soft: #1f2937;
-        --text: #f3f4f6;
-        --muted: #9ca3af;
-        --border: #374151;
-      }
-
-      body {
-        background: var(--bg);
-        color: var(--text);
-      }
-
-      .container {
-        background: var(--card);
-      }
-
-      .card div,
-      .notes-card p,
-      .payment-card p,
-      td,
-      th {
-        color: #f3f4f6;
-      }
-
-      thead {
-        background: #1e293b;
-      }
-
-      tbody tr:hover {
-        background: rgba(255,255,255,0.03);
-      }
-
-      .footer,
-      .summary-box,
-      .payment-card,
-      .notes-card,
-      .card {
-        background: var(--soft);
-      }
-
-      .summary-row.total {
-        background: linear-gradient(135deg, #000000, #111827);
-      }
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding: 14px;
-      }
-
-      .header,
-      .section,
-      .footer {
-        padding: 28px;
-      }
-
-      .invoice-meta {
-        text-align: left;
-      }
-
-      .bottom-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-grid {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .footer-right {
-        text-align: left;
-      }
-    }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Premium Account Update</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1e293b;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .wrapper {
+            background-color: #f8fafc;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            padding: 48px 32px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+        }
+        .header p {
+            margin: 8px 0 0 0;
+            color: #e0e7ff;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .content {
+            padding: 40px 32px;
+        }
+        .greeting {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 16px;
+        }
+        .intro-text {
+            font-size: 15px;
+            color: #475569;
+            margin-bottom: 24px;
+        }
+        .badge-premium {
+            display: inline-flex;
+            align-items: center;
+            background-color: #f5f3ff;
+            color: #7c3aed;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        .badge-standard {
+            display: inline-flex;
+            align-items: center;
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        .banner {
+            background-color: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 28px;
+        }
+        .banner h3 {
+            margin: 0 0 4px 0;
+            color: #166534;
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .banner p {
+            margin: 0;
+            color: #1e7040;
+            font-size: 14px;
+        }
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            margin-bottom: 12px;
+            margin-top: 24px;
+        }
+        .item-table th {
+            text-align: left;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            border-bottom: 1px solid #e2e8f0;
+            text-transform: uppercase;
+        }
+        .item-table td {
+            padding: 12px;
+            font-size: 14px;
+            color: #334155;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .item-name {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .item-meta {
+            font-size: 12px;
+            color: #64748b;
+        }
+        .price-align {
+            text-align: right;
+        }
+        .totals-section {
+            margin-top: 16px;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 16px;
+        }
+        .totals-row td {
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #475569;
+        }
+        .totals-row.grand-total td {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            padding-top: 12px;
+        }
+        .cta-container {
+            text-align: center;
+            margin: 32px 0 16px 0;
+        }
+        .btn-primary {
+            display: inline-block;
+            background-color: #4f46e5;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+        }
+        .btn-secondary {
+            display: inline-block;
+            background-color: #f8fafc;
+            color: #4f46e5;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .footer {
+            background-color: #f1f5f9;
+            padding: 32px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+        .footer p {
+            margin: 4px 0;
+            font-size: 12px;
+            color: #64748b;
+        }
+        .footer a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 32px 20px;
+            }
+            .header {
+                padding: 36px 20px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-  <div class="container">
-
-    <div class="header">
-      <div class="header-content">
-
-        <div class="brand">
-          <div class="logo">
-            {% if company_logo %}
-              <img src="{{ company_logo }}" alt="{{ company_name }}">
-            {% else %}
-              {{ company_initials }}
-            {% endif %}
-          </div>
-
-          <h1>{{ company_name }}</h1>
-          <p>{{ company_tagline }}</p>
-          <p>{{ company_email }}</p>
-          <p>{{ company_phone }}</p>
-          <p>{{ company_website }}</p>
-        </div>
-
-        <div class="invoice-meta">
-          <h2>Invoice</h2>
-
-          <div class="meta-grid">
-            <div class="meta-item">
-              <div class="meta-label">Invoice Number</div>
-              <div class="meta-value">{{ invoice_number }}</div>
+    <div class="wrapper">
+        <div class="container">
+            <div class="header">
+                <h1>{{ company_name }}</h1>
+                <p>Premium Service Update</p>
             </div>
+            <div class="content">
+                <div class="greeting">Hello {{ full_name }},</div>
+                <div class="intro-text">
+                    {{ message }}
+                </div>
 
-            <div class="meta-item">
-              <div class="meta-label">Issue Date</div>
-              <div class="meta-value">{{ issue_date }}</div>
+                {% if is_premium %}
+                <div class="badge-premium">
+                    ✦ Premium Member (Active)
+                </div>
+                {% else %}
+                <div class="badge-standard">
+                    ✧ Standard Member
+                </div>
+                {% endif %}
+
+                {% if show_banner %}
+                <div class="banner">
+                    <h3>🎁 Special Offer Just For You</h3>
+                    <p>Upgrade or extend your current license today and save up to {{ percentage }} using promo code <strong>{{ promo_code }}</strong> at checkout!</p>
+                </div>
+                {% endif %}
+
+                <div class="section-title">Order Details ({{ order_id }})</div>
+                <table class="item-table">
+                    <thead>
+                        <tr>
+                            <th>Item Description</th>
+                            <th class="price-align">Qty</th>
+                            <th class="price-align">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order_items %}
+                        <tr>
+                            <td>
+                                <div class="item-name">{{ item.name }}</div>
+                                <div class="item-meta">SKU: {{ item.sku }}</div>
+                            </td>
+                            <td class="price-align">{{ item.quantity }}</td>
+                            <td class="price-align item-name">{{ item.price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <table class="totals-section">
+                    <tr class="totals-row">
+                        <td style="width: 70%;">Subtotal</td>
+                        <td class="price-align" style="width: 30%;">{{ subtotal }}</td>
+                    </tr>
+                    <tr class="totals-row">
+                        <td>Tax &amp; Fees</td>
+                        <td class="price-align">{{ tax }}</td>
+                    </tr>
+                    <tr class="totals-row grand-total">
+                        <td>Total Amount Paid</td>
+                        <td class="price-align">{{ total }}</td>
+                    </tr>
+                </table>
+
+                <div class="cta-container">
+                    <a href="{{ cta_url }}" class="btn-primary">{{ cta_text }}</a>
+                    <br>
+                    {% if not is_premium %}
+                    <a href="{{ upgrade_url }}" class="btn-secondary">Explore Premium Benefits</a>
+                    {% endif %}
+                </div>
             </div>
-
-            <div class="meta-item">
-              <div class="meta-label">Due Date</div>
-              <div class="meta-value">{{ due_date }}</div>
+            <div class="footer">
+                <p>&copy; {{ year }} {{ company_name }}. All rights reserved.</p>
+                <p>Located at {{ address }}</p>
+                <p>You received this email because you registered on our platform.</p>
+                <p>
+                    <a href="{{ settings_url }}">Manage Preferences</a> &bull; 
+                    <a href="{{ unsubscribe_url }}">Unsubscribe</a>
+                </p>
             </div>
-          </div>
-
-          <div class="status {{ invoice_status_class }}">
-            ● {{ invoice_status_text }}
-          </div>
         </div>
-
-      </div>
     </div>
-
-    <div class="section">
-
-      <div class="top-grid">
-
-        <div>
-          <div class="block-label">Bill To</div>
-
-          <div class="card">
-            <strong>{{ bill_to_name }}</strong>
-            <div>{{ bill_to_attention }}</div>
-            <div>{{ bill_to_address_line_1 }}</div>
-            <div>{{ bill_to_address_line_2 }}</div>
-            <div>{{ bill_to_email }}</div>
-            <div>{{ bill_to_phone }}</div>
-          </div>
-        </div>
-
-        <div>
-          <div class="block-label">Issued By</div>
-
-          <div class="card">
-            <strong>{{ issued_by_name }}</strong>
-            <div>{{ issued_by_address_line_1 }}</div>
-            <div>{{ issued_by_address_line_2 }}</div>
-            <div>{{ issued_by_country }}</div>
-            <div>{{ issued_by_email }}</div>
-            <div>{{ issued_by_tax_id }}</div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Description</th>
-              <th>Qty</th>
-              <th>Rate</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for item in items %}
-            <tr>
-              <td>
-                <div class="item-title">{{ item.title }}</div>
-                <div class="item-desc">{{ item.description }}</div>
-              </td>
-              <td>{{ item.quantity }}</td>
-              <td>{{ item.rate }}</td>
-              <td>{{ item.amount }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-      <div class="bottom-grid">
-
-        <div>
-          <div class="notes-card">
-            <div class="block-label">Notes</div>
-            <p>{{ invoice_notes_line_1 }}</p>
-            <p>{{ invoice_notes_line_2 }}</p>
-          </div>
-
-          <br>
-
-          <div class="payment-card">
-            <div class="block-label">Payment Instructions</div>
-            <p><strong>Bank:</strong> {{ payment_bank }}</p>
-            <p><strong>Account Name:</strong> {{ payment_account_name }}</p>
-            <p><strong>IBAN:</strong> {{ payment_iban }}</p>
-            <p><strong>SWIFT:</strong> {{ payment_swift }}</p>
-            <p><strong>Reference:</strong> {{ payment_reference }}</p>
-          </div>
-        </div>
-
-        <div class="summary-box">
-          <div class="summary-row">
-            <span>Subtotal</span>
-            <span>{{ subtotal }}</span>
-          </div>
-
-          <div class="summary-row">
-            <span>Tax ({{ tax_rate }})</span>
-            <span>{{ tax_amount }}</span>
-          </div>
-
-          <div class="summary-row">
-            <span>Discount</span>
-            <span>{{ discount_amount }}</span>
-          </div>
-
-          <div class="summary-row total">
-            <span>Total</span>
-            <span>{{ total_amount }}</span>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-    <div class="footer">
-      <div class="footer-grid">
-        <div class="footer-left">
-          <h4>{{ footer_title }}</h4>
-          <p>{{ footer_text_line_1 }}</p>
-          <p>{{ footer_text_line_2 }}</p>
-        </div>
-
-        <div class="footer-right">
-          <p>{{ footer_right_line_1 }}</p>
-          <p>{{ footer_right_line_2 }}</p>
-        </div>
-      </div>
-    </div>
-
-  </div>
 </body>
 </html>

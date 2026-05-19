@@ -22,8 +22,9 @@ _COMPANIES = [
 
 _SCHOOLS = [
     "Westlake Academy", "Riverdale High School", "Pinecrest Institute",
-    "Summit Preparatory School", "Greenfield College", "Oakridge Learning Center",
-    "Crestview Charter School", "Maplewood High School",
+    "Summit Preparatory School", "Greenfield College",
+    "Oakridge Learning Center", "Crestview Charter School",
+    "Maplewood High School",
 ]
 
 _DOMAINS = [
@@ -48,9 +49,13 @@ _PLAN_NAMES = [
 
 _CURRENCIES = ["$", "€", "£"]
 
-_ROLES = ["Admin", "Manager", "Editor", "Viewer", "Owner", "Contributor", "Analyst"]
+_ROLES = [
+    "Admin", "Manager", "Editor", "Viewer", "Owner", "Contributor", "Analyst"
+]
 
-_STATUSES = ["Active", "Pending", "Processing", "Completed", "On Hold", "Cancelled"]
+_STATUSES = [
+    "Active", "Pending", "Processing", "Completed", "On Hold", "Cancelled"
+]
 
 _BADGE_LABELS = ["New", "Verified", "Premium", "Beta", "Featured", "Trusted"]
 
@@ -68,17 +73,6 @@ _CITIES = [
     "Boston, MA", "Chicago, IL", "Los Angeles, CA", "Denver, CO",
 ]
 
-_ORDER_IDS = lambda: f"ORD-{random.randint(100000, 999999)}"
-_INVOICE_IDS = lambda: f"INV-{random.randint(2024100, 2024999)}"
-_TICKET_IDS = lambda: f"TKT-{random.randint(10000, 99999)}"
-_PROMO_CODES = lambda: "SAVE" + str(random.randint(10, 50))
-_TOKENS = lambda: "".join(random.choices(string.ascii_letters + string.digits, k=32))
-
-
-# ---------------------------------------------------------------------------
-# URL helpers — return structurally valid dummy links
-# ---------------------------------------------------------------------------
-
 _BASE_URLS = [
     "https://app.acmecorp.io",
     "https://dashboard.getnotion.com",
@@ -86,29 +80,48 @@ _BASE_URLS = [
     "https://vercel.app",
 ]
 
-_URL_PATHS = {
-    "login":        "/auth/login",
-    "signup":       "/auth/register",
-    "dashboard":    "/dashboard",
-    "settings":     "/settings/profile",
-    "billing":      "/settings/billing",
-    "upgrade":      "/upgrade?ref=email",
-    "confirm":      "/confirm?token=" + _TOKENS(),
-    "reset":        "/auth/reset-password?token=" + _TOKENS(),
-    "unsubscribe":  "/unsubscribe?uid=" + _TOKENS()[:16],
-    "invoice":      "/invoices/" + _INVOICE_IDS(),
-    "order":        "/orders/" + _ORDER_IDS(),
-    "track":        "/shipping/track?id=" + _ORDER_IDS(),
-    "profile":      "/profile/edit",
-    "help":         "/help",
-    "privacy":      "/legal/privacy",
-    "terms":        "/legal/terms",
-}
+
+def _make_order_id() -> str:
+    return f"ORD-{random.randint(100000, 999999)}"
+
+
+def _make_invoice_id() -> str:
+    return f"INV-{random.randint(2024100, 2024999)}"
+
+
+def _make_ticket_id() -> str:
+    return f"TKT-{random.randint(10000, 99999)}"
+
+
+def _make_promo_code() -> str:
+    return f"SAVE{random.randint(10, 50)}"
+
+
+def _make_token() -> str:
+    return "".join(random.choices(string.ascii_letters + string.digits, k=32))
 
 
 def _make_url(path_key: str = "dashboard") -> str:
     base = random.choice(_BASE_URLS)
-    path = _URL_PATHS.get(path_key, "/")
+    paths = {
+        "login": "/auth/login",
+        "signup": "/auth/register",
+        "dashboard": "/dashboard",
+        "settings": "/settings/profile",
+        "billing": "/settings/billing",
+        "upgrade": "/upgrade?ref=email",
+        "confirm": f"/confirm?token={_make_token()}",
+        "reset": f"/auth/reset-password?token={_make_token()}",
+        "unsubscribe": f"/unsubscribe?uid={_make_token()[:16]}",
+        "invoice": f"/invoices/{_make_invoice_id()}",
+        "order": f"/orders/{_make_order_id()}",
+        "track": f"/shipping/track?id={_make_order_id()}",
+        "profile": "/profile/edit",
+        "help": "/help",
+        "privacy": "/legal/privacy",
+        "terms": "/legal/terms",
+    }
+    path = paths.get(path_key, "/")
     return base + path
 
 
@@ -123,40 +136,30 @@ def _make_email(first: str = "", last: str = "") -> str:
     return f"user{random.randint(1000, 9999)}@{domain}"
 
 
-def _make_price(low: int = 9, high: int = 499) -> str:
+def _make_price() -> str:
     currency = random.choice(_CURRENCIES)
-    amount = random.choice([9.99, 19.99, 29.99, 49.99, 79.99, 99.99, 149.00, 299.00])
+    amount = random.choice([
+        9.99, 19.99, 29.99, 49.99, 79.99, 99.99, 149.00, 299.00
+    ])
     return f"{currency}{amount:,.2f}"
 
 
-# ---------------------------------------------------------------------------
-# Core resolver
-# ---------------------------------------------------------------------------
-
 def get_mock_value(var_name: str) -> str:
-    """Return a semantically appropriate mock value for the given variable name."""
     name = var_name.lower().replace(".", "_")
 
-    # ── Names ──────────────────────────────────────────────────────────────
     if any(x in name for x in ["first_name", "firstname"]):
         return random.choice(_FIRST_NAMES)
     if any(x in name for x in ["last_name", "lastname", "surname"]):
         return random.choice(_LAST_NAMES)
     if any(x in name for x in ["full_name", "fullname"]):
-        first = random.choice(_FIRST_NAMES)
-        last = random.choice(_LAST_NAMES)
-        return f"{first} {last}"
-    if any(x in name for x in ["username", "user_name", "handle"]):
-        first = random.choice(_FIRST_NAMES).lower()
-        return f"{first}{random.randint(10, 99)}"
-    if any(x in name for x in ["student_name", "student"]):
         return f"{random.choice(_FIRST_NAMES)} {random.choice(_LAST_NAMES)}"
-    if "name" in name and "user" in name:
+    if any(x in name for x in ["username", "user_name", "handle"]):
+        return f"{random.choice(_FIRST_NAMES).lower()}{random.randint(10, 99)}"
+    if any(x in name for x in ["student_name", "student"]):
         return f"{random.choice(_FIRST_NAMES)} {random.choice(_LAST_NAMES)}"
     if "name" in name:
         return f"{random.choice(_FIRST_NAMES)} {random.choice(_LAST_NAMES)}"
 
-    # ── Emails ─────────────────────────────────────────────────────────────
     if any(x in name for x in ["email", "mail_address", "mailaddress"]):
         return _make_email(
             random.choice(_FIRST_NAMES),
@@ -165,7 +168,6 @@ def get_mock_value(var_name: str) -> str:
     if "support_email" in name:
         return random.choice(_SUPPORT_EMAILS)
 
-    # ── URLs / Links ────────────────────────────────────────────────────────
     if any(x in name for x in ["unsubscribe_url", "unsubscribe_link"]):
         return _make_url("unsubscribe")
     if any(x in name for x in ["login_url", "signin_url", "sign_in_url"]):
@@ -178,7 +180,11 @@ def get_mock_value(var_name: str) -> str:
         return _make_url("billing")
     if any(x in name for x in ["upgrade_url", "upgrade_link"]):
         return _make_url("upgrade")
-    if any(x in name for x in ["confirm_url", "confirmation_url", "verify_url", "verification_url"]):
+    if any(
+        x in name for x in [
+            "confirm_url", "confirmation_url", "verify_url", "verification_url"
+        ]
+    ):
         return _make_url("confirm")
     if any(x in name for x in ["reset_url", "reset_link", "password_reset"]):
         return _make_url("reset")
@@ -201,25 +207,31 @@ def get_mock_value(var_name: str) -> str:
     if any(x in name for x in ["url", "link", "href"]):
         return _make_url("dashboard")
 
-    # ── Company / Organisation ─────────────────────────────────────────────
-    if any(x in name for x in ["company_name", "company", "org_name", "organisation", "organization"]):
+    if any(
+        x in name for x in [
+            "company_name", "company", "org_name",
+            "organisation", "organization"
+        ]
+    ):
         return random.choice(_COMPANIES)
     if "school" in name:
         return random.choice(_SCHOOLS)
     if "brand" in name:
         return random.choice(_COMPANIES)
 
-    # ── Prices / Money ─────────────────────────────────────────────────────
-    if any(x in name for x in ["price", "amount", "cost", "total", "subtotal",
-                                 "tax", "fee", "charge", "balance", "refund",
-                                 "discount_amount", "savings"]):
+    if any(
+        x in name for x in [
+            "price", "amount", "cost", "total", "subtotal",
+            "tax", "fee", "charge", "balance", "refund",
+            "discount_amount", "savings"
+        ]
+    ):
         return _make_price()
     if "plan_price" in name or "monthly_price" in name:
-        return _make_price(9, 99)
+        return _make_price()
     if "annual_price" in name:
-        return _make_price(99, 999)
+        return _make_price()
 
-    # ── Plans / Subscriptions ──────────────────────────────────────────────
     if any(x in name for x in ["plan_name", "plan", "tier", "subscription"]):
         return random.choice(_PLAN_NAMES)
     if "billing_cycle" in name:
@@ -227,55 +239,72 @@ def get_mock_value(var_name: str) -> str:
     if "seats" in name or "seat_count" in name:
         return str(random.randint(2, 25))
 
-    # ── IDs / Codes ─────────────────────────────────────────────────────────
     if any(x in name for x in ["order_id", "order_number"]):
-        return _ORDER_IDS()
+        return _make_order_id()
     if any(x in name for x in ["invoice_id", "invoice_number"]):
-        return _INVOICE_IDS()
+        return _make_invoice_id()
     if any(x in name for x in ["ticket_id", "ticket_number", "ticket"]):
-        return _TICKET_IDS()
-    if any(x in name for x in ["promo_code", "coupon", "discount_code", "voucher"]):
-        return _PROMO_CODES()
-    if any(x in name for x in ["token", "api_key", "secret", "verification_code"]):
-        return _TOKENS()
+        return _make_ticket_id()
+    if any(
+        x in name for x in ["promo_code", "coupon", "discount_code", "voucher"]
+    ):
+        return _make_promo_code()
+    if any(
+        x in name for x in ["token", "api_key", "secret", "verification_code"]
+    ):
+        return _make_token()
     if any(x in name for x in ["transaction_id", "payment_id"]):
-        return "TXN-" + "".join(random.choices(string.ascii_uppercase + string.digits, k=12))
+        txn_part = "".join(
+            random.choices(string.ascii_uppercase + string.digits, k=12)
+        )
+        return f"TXN-{txn_part}"
 
-    # ── Dates / Times ──────────────────────────────────────────────────────
-    if any(x in name for x in ["renewal_date", "next_billing_date", "next_charge_date"]):
+    if any(
+        x in name for x in [
+            "renewal_date", "next_billing_date", "next_charge_date"
+        ]
+    ):
         return _make_date(offset_days=random.randint(1, 30))
-    if any(x in name for x in ["expiry_date", "expiration_date", "expires_at", "expire_date"]):
+    if any(
+        x in name for x in [
+            "expiry_date", "expiration_date", "expires_at", "expire_date"
+        ]
+    ):
         return _make_date(offset_days=random.randint(3, 14))
     if any(x in name for x in ["due_date", "payment_due"]):
         return _make_date(offset_days=random.randint(7, 30))
-    if any(x in name for x in ["date", "created_at", "updated_at", "timestamp"]):
+    if any(
+        x in name for x in ["date", "created_at", "updated_at", "timestamp"]
+    ):
         return _make_date()
     if "year" in name:
         return str(datetime.now().year)
     if "time" in name:
         return datetime.now().strftime("%I:%M %p")
 
-    # ── Addresses ─────────────────────────────────────────────────────────
     if any(x in name for x in ["address", "city", "location"]):
         return random.choice(_CITIES)
     if "country" in name:
-        return random.choice(["United States", "United Kingdom", "Canada", "Australia"])
+        return random.choice(
+            ["United States", "United Kingdom", "Canada", "Australia"]
+        )
     if "postal_code" in name or "zip_code" in name or "zipcode" in name:
         return f"{random.randint(10000, 99999)}"
 
-    # ── Roles / Permissions ────────────────────────────────────────────────
     if any(x in name for x in ["role", "permission", "access_level"]):
         return random.choice(_ROLES)
     if "department" in name:
-        return random.choice(["Engineering", "Marketing", "Sales", "Support", "Design"])
+        return random.choice(
+            ["Engineering", "Marketing", "Sales", "Support", "Design"]
+        )
 
-    # ── Statuses ───────────────────────────────────────────────────────────
-    if any(x in name for x in ["status", "state", "order_status", "payment_status"]):
+    if any(
+        x in name for x in ["status", "state", "order_status", "payment_status"]
+    ):
         return random.choice(_STATUSES)
     if any(x in name for x in ["badge", "badge_label", "label"]):
         return random.choice(_BADGE_LABELS)
 
-    # ── Products / Items ───────────────────────────────────────────────────
     if any(x in name for x in ["product_name", "item_name", "product"]):
         return random.choice(_PRODUCTS)
     if "category" in name:
@@ -283,13 +312,18 @@ def get_mock_value(var_name: str) -> str:
     if "quantity" in name or "qty" in name:
         return str(random.randint(1, 10))
     if "sku" in name:
-        return "SKU-" + "".join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        sku_part = "".join(
+            random.choices(string.ascii_uppercase + string.digits, k=8)
+        )
+        return f"SKU-{sku_part}"
 
-    # ── CTA / Buttons ─────────────────────────────────────────────────────
-    if any(x in name for x in ["cta_text", "button_text", "button_label", "action_label"]):
+    if any(
+        x in name for x in [
+            "cta_text", "button_text", "button_label", "action_label"
+        ]
+    ):
         return random.choice(_CTA_TEXTS)
 
-    # ── Content / Text ─────────────────────────────────────────────────────
     if any(x in name for x in ["subject", "email_subject"]):
         return random.choice([
             "Your order is confirmed",
@@ -306,12 +340,16 @@ def get_mock_value(var_name: str) -> str:
             "Order Confirmed",
             "Invoice Ready",
         ])
-    if any(x in name for x in ["message", "body", "content", "intro", "description", "desc"]):
+    if any(
+        x in name for x in [
+            "message", "body", "content", "intro", "description", "desc"
+        ]
+    ):
         return random.choice([
-            "We're excited to have you on board. Everything is set up and ready for you.",
-            "A quick heads-up about your account — please review the details below.",
-            "Your request has been processed successfully. Here's a summary of what happened.",
-            "Thank you for your continued trust. We're here if you need anything.",
+            "We're excited to have you on board. Everything is set up.",
+            "A quick heads-up about your account — please review the details.",
+            "Your request has been processed successfully.",
+            "Thank you for your continued trust. We're here if you need help.",
         ])
     if any(x in name for x in ["tagline", "subtitle", "subheading"]):
         return random.choice([
@@ -320,13 +358,12 @@ def get_mock_value(var_name: str) -> str:
             "Everything you need, nothing you don't.",
         ])
     if any(x in name for x in ["note", "footnote", "footer_note"]):
-        return "This is an automated message. Please do not reply directly to this email."
+        return "This is an automated message. Please do not reply."
     if any(x in name for x in ["greeting", "salutation"]):
         return f"Hello, {random.choice(_FIRST_NAMES)}!"
     if any(x in name for x in ["signature", "sign_off"]):
         return f"The {random.choice(_COMPANIES)} Team"
 
-    # ── Counts / Numbers ──────────────────────────────────────────────────
     if any(x in name for x in ["count", "total_count", "num", "number"]):
         return str(random.randint(1, 50))
     if any(x in name for x in ["percentage", "percent", "rate"]):
@@ -334,25 +371,21 @@ def get_mock_value(var_name: str) -> str:
     if any(x in name for x in ["days_left", "days_remaining", "days_until"]):
         return str(random.randint(1, 30))
 
-    # ── Phone ─────────────────────────────────────────────────────────────
     if any(x in name for x in ["phone", "phone_number", "mobile"]):
-        return f"+1 ({random.randint(200, 999)}) {random.randint(200, 999)}-{random.randint(1000, 9999)}"
+        return (
+            f"+1 ({random.randint(200, 999)}) "
+            f"{random.randint(200, 999)}-{random.randint(1000, 9999)}"
+        )
 
-    # ── Fallback ──────────────────────────────────────────────────────────
     return f"Sample {var_name.replace('_', ' ').title()}"
 
 
-# ---------------------------------------------------------------------------
-# Context builder
-# ---------------------------------------------------------------------------
-
 def build_mock_context(
-    all_vars: set[str],
-    if_flags: list[str],
-    for_loops: list[tuple[str, str]],
+    all_vars: set,
+    if_flags: list,
+    for_loops: list,
 ) -> dict:
-    """Build a complete Jinja2 context dict with realistic mock data."""
-    ctx: dict = {}
+    ctx = {}
 
     for item_var, collection_var in for_loops:
         ctx[collection_var] = _build_loop_collection(item_var)
@@ -371,18 +404,22 @@ def build_mock_context(
     return ctx
 
 
-def _build_loop_collection(item_var: str) -> list[dict]:
-    """Build a realistic list of dicts for a for-loop collection."""
+def _build_loop_collection(item_var: str) -> list:
     count = random.randint(3, 5)
 
-    if any(x in item_var for x in ["order_item", "line_item", "item", "product"]):
+    if any(
+        x in item_var for x in ["order_item", "line_item", "item", "product"]
+    ):
+        sku_part = "".join(
+            random.choices(string.ascii_uppercase + string.digits, k=6)
+        )
         return [
             {
                 item_var: get_mock_value("product_name"),
                 "name": random.choice(_PRODUCTS),
                 "price": _make_price(),
                 "quantity": str(random.randint(1, 5)),
-                "sku": "SKU-" + "".join(random.choices(string.ascii_uppercase + string.digits, k=6)),
+                "sku": f"SKU-{sku_part}",
                 "url": _make_url("order"),
             }
             for _ in range(count)
@@ -399,28 +436,30 @@ def _build_loop_collection(item_var: str) -> list[dict]:
             "99.9% uptime SLA",
             "Dedicated account manager",
         ]
-        return [{item_var: f} for f in random.sample(features, k=min(count, len(features)))]
+        sampled = random.sample(features, k=min(count, len(features)))
+        return [{item_var: f} for f in sampled]
 
     if any(x in item_var for x in ["link", "nav_item", "menu_item"]):
         links = [
             {"label": "Dashboard", "url": _make_url("dashboard")},
-            {"label": "Settings",  "url": _make_url("settings")},
-            {"label": "Billing",   "url": _make_url("billing")},
-            {"label": "Help",      "url": _make_url("help")},
+            {"label": "Settings", "url": _make_url("settings")},
+            {"label": "Billing", "url": _make_url("billing")},
+            {"label": "Help", "url": _make_url("help")},
         ]
         return [{item_var: lnk["label"], **lnk} for lnk in links[:count]]
 
     if any(x in item_var for x in ["member", "user", "teammate"]):
+        first = random.choice(_FIRST_NAMES)
+        last = random.choice(_LAST_NAMES)
         return [
             {
-                item_var: f"{random.choice(_FIRST_NAMES)} {random.choice(_LAST_NAMES)}",
+                item_var: f"{first} {last}",
                 "role": random.choice(_ROLES),
-                "email": _make_email(random.choice(_FIRST_NAMES), random.choice(_LAST_NAMES)),
+                "email": _make_email(first, last),
             }
             for _ in range(count)
         ]
 
-    # Generic fallback
     return [
         {item_var: get_mock_value(f"{item_var}_{i + 1}")}
         for i in range(count)
