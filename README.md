@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg" width="128" height="128" alt="Gmail Logo">
+</p>
+
 <h1 align="center">
   🚀 Gmail Template Tester
 </h1>
@@ -65,14 +69,14 @@ This tool eliminates all of that. **Point it at a template file and it handles t
 **1. Clone the repository**
 
 ```bash
-git clone <your-repo-url>
-cd gmail-template-tester
+git clone https://github.com/Volcann/gmail-html-mailer.git
+cd gmail-html-mailer
 ```
 
 **2. Install dependencies**
 
 ```bash
-pip install jinja2 python-dotenv
+pip install -r requirements.txt
 ```
 
 **3. Configure environment**
