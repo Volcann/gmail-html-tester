@@ -1,23 +1,26 @@
 <img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
-## 🚀 Send mails to Gmail in seconds and test you html template
+## 🚀 Smart HTML Template Mailer
 
-This guide walks you through configuring and running a simple Python script to send HTML emails via Gmail SMTP in just a few seconds. Perfect for quick notifications, alerts, or any automated email tasks.
+This tool allows you to take **any** HTML email template, automatically parse its Jinja2-style variables, and send it to your inbox to test how it renders. 
+
+It acts as a robust testing engine for your email designs:
+- **Auto-Detects Variables:** Finds all `{{ variable }}` instances and auto-generates logical dummy data based on the variable's name (e.g. `first_name` generates a real name, `url` generates a link).
+- **Handles Conditional Logic:** Detects `{% if condition %}` blocks and automatically generates and sends multiple emails (one where the condition is True, one where it is False) to cover every scenario.
+- **Supports Loops:** Identifies `{% for item in items %}` and automatically injects realistic JSON array data to test lists.
+- **Modular and Clean Code:** Built strictly with flake8 standards across separate, organized modules.
 
 <img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
 ### 🔧 Prerequisites
 
 1. Python 3.7 or higher installed on your system.
-2. A Gmail account with [App Password](https://support.google.com/accounts/answer/185833) enabled (recommended for security).
-3. Basic familiarity with the terminal/command line.
-4. Your HTML email template (`email_template.html`).
+2. A Gmail account with [App Password](https://support.google.com/accounts/answer/185833) enabled.
+3. An HTML template utilizing Jinja2 template variables (like `demo_full_template.html`).
 
 <img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
 ### 🔐 Generating a Gmail App Password
-
-Before you start, you need a secure App Password to authenticate with Gmail. Follow these steps:
 
 1. **Sign in to your Google Account** at [https://myaccount.google.com](https://myaccount.google.com).
 2. Navigate to **Security** in the left sidebar.
@@ -31,58 +34,50 @@ Before you start, you need a secure App Password to authenticate with Gmail. Fol
 
 1. **Clone or download** this repository to your local machine.
 
-   ```bash
-   git clone https://github.com/your-username/gmail-html-mailer.git
-   cd gmail-html-mailer
-   ```
-
 2. **Create a virtual environment** (optional but recommended):
 
    ```bash
    python3 -m venv venv
    source venv/bin/activate   # macOS/Linux
-   venv\\Scripts\\activate  # Windows
+   venv\Scripts\activate      # Windows
    ```
 
 3. **Install dependencies**:
 
    ```bash
-   pip install -r requirements.txt
+   pip install jinja2 python-dotenv
    ```
 
 4. **Setup environment variables**:
 
-   * Create a file named `.env` in the project root.
-   * Add the following keys, replacing values with your own credentials:
-
-     ```env
-     SENDER_EMAIL=your@gmail.com
-     APP_PASSWORD=16_character_app_password
-     RECEIVER_EMAIL=recipient@gmail.com
-     ```
-
-5. **Prepare your HTML template**:
-
-   * Ensure there’s a file named `email_template.html` in the root.
-   * Add any inline styles, images, or structure you need.
-
-6. **Run the script**:
-
-   ```bash
-   python send_html_email.py
+   Create a file named `.env` in the project root.
+   ```env
+   SENDER_EMAIL=your@gmail.com
+   APP_PASSWORD=16_character_app_password
+   RECEIVER_EMAIL=recipient@gmail.com
    ```
 
-   You should see `✅ Email sent—check your Gmail inbox now!` in your console.
+### 🏃 How to Run
 
-<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
+Simply execute the main orchestration file and pass the path to your HTML file:
 
-### 💡 How It Works
+```bash
+python main.py demo_full_template.html
+```
 
-1. **Load `.env`**: The script uses `python-dotenv` to load credentials into `os.environ`.
-2. **Read HTML Template**: Pulls in your `email_template.html` verbatim.
-3. **Compose Email**: Uses `email.mime.text.MIMEText` to wrap the HTML content.
-4. **Connect & Authenticate**: Opens an SMTP connection to `smtp.gmail.com:587`, starts TLS, and logs in.
-5. **Send**: Dispatches the email and closes the connection automatically.
+#### CLI Flags:
+- `--subject` / `-s`: Specify the email subject manually.
+- `--dry-run` / `-d`: Parse variables and render the templates locally without actually sending emails.
+- `--save-html`: Output the final compiled templates as local HTML files (helpful for debugging).
+
+### 💡 Project Architecture
+
+The core code resides in the `mailer/` package to maintain separation of concerns and maximum cleanliness:
+- `mailer/parser.py`: Scans templates and extracts variables, conditionals, and loops.
+- `mailer/prompts.py`: Beautiful command-line interface to interactively gather values.
+- `mailer/generator.py`: Permutation builder ensuring all `if`/`else` branches are tested.
+- `mailer/smtp.py`: The secure dispatch interface for sending the built templates.
+- `main.py`: The root script managing the flow of the application.
 
 <img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
 
@@ -90,12 +85,4 @@ Before you start, you need a secure App Password to authenticate with Gmail. Fol
 
 * **SMTP Timeout / Connection Errors**: Ensure port `587` is open, and your network allows outbound SMTP.
 * **Authentication Failed**: Double-check your `APP_PASSWORD`. Regular Gmail passwords won’t work if 2FA is enabled.
-* **HTML Not Rendering**: Confirm your template is valid HTML and includes proper `<html>`, `<body>`, etc.
-
-<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="100%">
-
-### 📈 Next Steps
-
-* Integrate into a larger notification system or CI/CD pipeline.
-* Swap Gmail SMTP for another provider (Outlook, SendGrid, etc.).
-* Expand to include attachments, inline images, or templating engines like Jinja2.
+* **Syntax Error in Template**: Make sure your `{% if %}` and `{% for %}` statements have proper terminating tags.

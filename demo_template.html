@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitation to Join Money Talks</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+            padding: 45px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .content {
+            padding: 40px 32px;
+        }
+
+        .greeting {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: #111827;
+        }
+
+        .message {
+            font-size: 15px;
+            color: #4b5563;
+            margin-bottom: 22px;
+        }
+
+        .role-badge {
+            display: inline-block;
+            background-color: #e3f2fd;
+            color: #1565c0;
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 28px;
+        }
+
+        .cta-container {
+            text-align: center;
+            margin: 38px 0;
+        }
+
+        .button {
+            background-color: #0d47a1;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 16px 34px;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .button:hover {
+            background-color: #08306b;
+        }
+
+        .link-box {
+            margin-top: 24px;
+            padding: 16px;
+            background-color: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #0d47a1;
+            word-break: break-word;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 24px 20px;
+            text-align: center;
+            border-top: 1px solid #eeeeee;
+        }
+
+        .footer p {
+            margin: 6px 0;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 30px 22px;
+            }
+
+            .header {
+                padding: 36px 22px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .button {
+                width: 100%;
+                box-sizing: border-box;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="header">
+            <h1>MONEY TALKS</h1>
+        </div>
+
+        <div class="content">
+
+            <div class="greeting">
+                Hello {{ first_name }},
+            </div>
+
+            <div class="message">
+                You have been invited to join <strong>Money Talks</strong>.
+            </div>
+
+            <div class="role-badge">
+                {{ role_label }}
+            </div>
+
+            <div class="message">
+                Your access has been prepared and your invitation is ready to activate.
+                Click the button below to continue and complete your account setup.
+            </div>
+
+            <div class="cta-container">
+                {% if url %}
+                <a href="{{ url }}"
+                   class="button"
+                   style="background-color: #0d47a1; color: #ffffff !important; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; display: inline-block;"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    Accept Invitation
+                </a>
+                {% else %}
+                <p style="color: #d32f2f; font-size: 14px;">
+                    Invitation link is not configured. Please contact support.
+                </p>
+                {% endif %}
+            </div>
+
+            {% if url %}
+            <div class="message">
+                If the button does not open correctly, use the secure invitation link below:
+            </div>
+
+            <div class="link-box">
+                {{ url }}
+            </div>
+            {% endif %}
+
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 Money Talks. All rights reserved.</p>
+            <p>If you were not expecting this invitation, you can safely ignore this email.</p>
+        </div>
+
+    </div>
+</body>
+</html>
