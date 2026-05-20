@@ -14,10 +14,10 @@
     <img alt="License" src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
   </a>
   <a href="https://github.com/Mohsin/gmail-template-tester/stargazers">
-    <img alt="Stargazers" src="https://img.shields.io/github/stars/Mohsin/gmail-template-tester?style=for-the-badge&logo=starship&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
+    <img alt="Stargazers" src="https://img.shields.io/github/stars/volcann/gmail-html-mailer?style=for-the-badge&logo=starship&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
   </a>
   <a href="https://github.com/Mohsin/gmail-template-tester/graphs/contributors">
-    <img alt="Contributors" src="https://img.shields.io/github/contributors/Mohsin/gmail-template-tester?style=for-the-badge&logo=gitbook&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
+    <img alt="Contributors" src="https://img.shields.io/github/contributors/volcann/gmail-html-mailer?style=for-the-badge&logo=gitbook&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
   </a>
 </p><br>
 
