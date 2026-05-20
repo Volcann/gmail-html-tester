@@ -299,7 +299,12 @@ def get_mock_value(var_name: str) -> str:
         )
 
     if any(
-        x in name for x in ["status", "state", "order_status", "payment_status"]
+        x in name for x in [
+            "status",
+            "state",
+            "order_status",
+            "payment_status",
+        ]
     ):
         return random.choice(_STATUSES)
     if any(x in name for x in ["badge", "badge_label", "label"]):

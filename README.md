@@ -122,6 +122,35 @@ python main.py templates/invoice.html --dry-run
 python main.py templates/order_shipped.html
 ```
 
+### Console Output
+
+When you run the tool, you will see a clean visual summary of the template analysis and variant dispatching:
+
+```text
+╔══════════════════════════════════════════╗
+║    🚀  Smart HTML Template Mailer        ║
+╚══════════════════════════════════════════╝
+
+────────────────────────────────────────────
+  Template: demo_template.html
+────────────────────────────────────────────
+  ℹ  Variables : 19
+  ℹ  Flags     : 2
+  ℹ  Loops     : 1
+  ℹ  Variants  : 4
+  ⚠  Dry-run mode — no emails will be sent
+
+────────────────────────────────────────────
+  Dispatching
+────────────────────────────────────────────
+  ✔  [1/4] ON:is_premium+show_banner
+  ✔  [2/4] ON:is_premium | OFF:show_banner
+  ✔  [3/4] ON:show_banner | OFF:is_premium
+  ✔  [4/4] OFF:is_premium+show_banner
+
+  Result  sent=4  failed=0  time=0.01s
+```
+
 ---
 
 ## How It Works
