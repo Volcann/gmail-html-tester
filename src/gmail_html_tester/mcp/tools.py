@@ -3,8 +3,13 @@ import jinja2
 from typing import Any
 
 from .app import mcp
-from .schemas import AnalyzeReq, MockReq, DispatchReq, TestHtmlReq
-
+from .schemas import (
+    AnalyzeReq,
+    MockReq,
+    DispatchReq,
+    TestHtmlReq,
+    UpdateTemplateReq,
+)
 from gmail_html_tester.parser import (
     extract_for_loops,
     extract_if_flags,
@@ -12,7 +17,7 @@ from gmail_html_tester.parser import (
 )
 from gmail_html_tester.mock import build_mock_context, get_mock_value
 from gmail_html_tester.generator import build_variants
-from gmail_html_tester.smtp import send_email
+from gmail_html_tester.smtp import send_email, send_emails_bulk
 
 
 @mcp.tool()
@@ -48,6 +53,7 @@ def analyze(req: AnalyzeReq) -> dict[str, Any]:
 def generate_mocks(req: MockReq) -> dict[str, Any]:
     return {"mocks": {v: get_mock_value(v) for v in req.vars}}
 
+
 @mcp.tool()
 def dispatch(req: DispatchReq) -> dict[str, Any]:
     sender = os.getenv("SENDER_EMAIL")
@@ -75,6 +81,7 @@ def dispatch(req: DispatchReq) -> dict[str, Any]:
     except Exception as e:
         return {"err": str(e)}
 
+
 @mcp.tool()
 def test_raw_html(req: TestHtmlReq) -> dict[str, Any]:
     sender = os.getenv("SENDER_EMAIL")
@@ -95,18 +102,41 @@ def test_raw_html(req: TestHtmlReq) -> dict[str, Any]:
     variants = build_variants(ctx, flags)
     tpl = env.from_string(req.html)
 
-    res = []
+    payloads = []
     for label, c in variants:
         html = tpl.render(**c)
         subj = f"{req.subject} [{label}]"
+        payloads.append((label, subj, html))
 
-        if req.dry_run:
+    res = []
+    if req.dry_run:
+        for label, subj, html in payloads:
             res.append({"label": label, "subj": subj, "preview": html[:200]})
-        else:
-            try:
-                send_email(sender, pwd, rcv, subj, html, False)
+    else:
+        errors = send_emails_bulk(
+            sender, pwd, rcv,
+            [(subj, html) for _, subj, html in payloads],
+            False
+        )
+        for (label, _, _), err in zip(payloads, errors, strict=False):
+            if err is None:
                 res.append({"label": label, "ok": True})
-            except Exception as e:
-                res.append({"label": label, "err": str(e)})
+            else:
+                res.append({"label": label, "err": str(err)})
 
     return {"ok": True, "total": len(variants), "res": res}
+
+
+@mcp.tool()
+def update_email_template(req: UpdateTemplateReq) -> dict[str, Any]:
+    path = os.path.join(os.getcwd(), "templates", "email_template.html")
+
+    if not os.path.exists(os.path.dirname(path)):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(req.html)
+        return {"ok": True, "path": path}
+    except Exception as e:
+        return {"err": str(e)}

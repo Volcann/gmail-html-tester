@@ -48,3 +48,9 @@ class TestHtmlReq(BaseModel):
         default=False,
         description="Set to true to render only (no email).",
     )
+
+class UpdateTemplateReq(BaseModel):
+    html: str = Field(
+        ...,
+        description="The raw HTML string to save to the default templates/email_template.html file.",
+    )
