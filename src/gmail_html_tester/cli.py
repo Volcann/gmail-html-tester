@@ -5,15 +5,15 @@ import argparse
 from dotenv import load_dotenv
 from jinja2 import Environment, FileSystemLoader
 
-from mailer.generator import build_variants
-from mailer.mock import build_mock_context
-from mailer.parser import (
+from gmail_html_tester.generator import build_variants
+from gmail_html_tester.mock import build_mock_context
+from gmail_html_tester.parser import (
     extract_for_loops,
     extract_if_flags,
     get_all_variables,
 )
-from mailer.smtp import send_email
-from mailer.utils import (
+from gmail_html_tester.smtp import send_emails_bulk
+from gmail_html_tester.utils import (
     Timer,
     print_banner,
     print_err,
@@ -131,25 +131,27 @@ def run() -> None:
         print_warn("Dry-run mode — no emails will be sent")
 
     print_section("Dispatching")
-    sent = 0
-    failed = 0
     timer = Timer()
     total = len(variants)
-
+    
+    payloads = []
     for i, (label, ctx) in enumerate(variants, 1):
         v_subj = f"{subject} [{i}/{total}: {label}]"
-        try:
-            html = env.get_template(t_name).render(**ctx)
-            if args.save_html:
-                _save_variant(t_dir, stem, i, html)
-            send_email(
-                sender, password, receiver,
-                v_subj, html, args.dry_run,
-            )
+        html = env.get_template(t_name).render(**ctx)
+        if args.save_html:
+            _save_variant(t_dir, stem, i, html)
+        payloads.append((v_subj, html))
+        
+    errors = send_emails_bulk(sender, password, receiver, payloads, args.dry_run)
+    
+    sent = 0
+    failed = 0
+    for i, ((label, _), err) in enumerate(zip(variants, errors), 1):
+        if err is None:
             print_ok(f"[{i}/{total}] {label}")
             sent += 1
-        except Exception as exc:
-            print_err(f"[{i}/{total}] {label} — {exc}")
+        else:
+            print_err(f"[{i}/{total}] {label} — {err}")
             failed += 1
 
     print_summary(sent, failed, timer.elapsed())
