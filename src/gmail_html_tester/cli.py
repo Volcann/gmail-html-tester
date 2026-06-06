@@ -5,15 +5,15 @@ import argparse
 from dotenv import load_dotenv
 from jinja2 import Environment, FileSystemLoader
 
-from mailer.generator import build_variants
-from mailer.mock import build_mock_context
-from mailer.parser import (
+from gmail_html_tester.generator import build_variants
+from gmail_html_tester.mock import build_mock_context
+from gmail_html_tester.parser import (
     extract_for_loops,
     extract_if_flags,
     get_all_variables,
 )
-from mailer.smtp import send_email
-from mailer.utils import (
+from gmail_html_tester.smtp import send_email
+from gmail_html_tester.utils import (
     Timer,
     print_banner,
     print_err,
