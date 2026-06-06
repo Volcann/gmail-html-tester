@@ -30,8 +30,8 @@ class DispatchReq(BaseModel):
         description="Mock payload.",
     )
     dry_run: bool = Field(
-        default=True,
-        description="Render only, no email.",
+        default=False,
+        description="Set to true to render only (no email).",
     )
 
 
@@ -45,6 +45,6 @@ class TestHtmlReq(BaseModel):
         description="Email subject.",
     )
     dry_run: bool = Field(
-        default=True,
-        description="Render only, no email.",
+        default=False,
+        description="Set to true to render only (no email).",
     )
