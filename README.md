@@ -76,7 +76,13 @@ cd gmail-html-mailer
 **2. Install dependencies**
 
 ```bash
-pip install -r requirements.txt
+# Using uv (recommended)
+uv sync
+
+# Or using standard python venv + pip
+python3 -m venv .venv
+source .venv/bin/activate
+pip install .
 ```
 
 **3. Configure environment**
