@@ -144,10 +144,14 @@ pip install .
 
 Create a `.env` file in the project root:
 
-```env
+```env# SMTP Configuration
 SENDER_EMAIL=your_email@gmail.com
 APP_PASSWORD=your_16_character_app_password
 RECEIVER_EMAIL=where_to_send_tests@gmail.com
+
+# LLM Context Generation (Optional)
+USE_GEMINI=false
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 > Keep your `.env` file out of version control. A `.gitignore` entry for `.env` is included in the repo.
@@ -181,6 +185,35 @@ python main.py templates/invoice.html --dry-run
 
 # Test a notification email
 python main.py templates/order_shipped.html
+```
+
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
+
+## Console Output
+
+```text
+╔══════════════════════════════════════════╗
+║    🚀  Smart HTML Template Mailer        ║
+╚══════════════════════════════════════════╝
+
+────────────────────────────────────────────
+  Template: demo_template.html
+────────────────────────────────────────────
+  ℹ  Variables : 19
+  ℹ  Flags     : 2
+  ℹ  Loops     : 1
+  ℹ  Variants  : 4
+  ⚠  Dry-run mode — no emails will be sent
+
+────────────────────────────────────────────
+  Dispatching
+────────────────────────────────────────────
+  ✔  [1/4] ON:is_premium+show_banner
+  ✔  [2/4] ON:is_premium | OFF:show_banner
+  ✔  [3/4] ON:show_banner | OFF:is_premium
+  ✔  [4/4] OFF:is_premium+show_banner
+
+  Result  sent=4  failed=0  time=0.01s
 ```
 
 <img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
@@ -220,35 +253,6 @@ echo "Test templates/order_shipped.html" | gemini --yolo
 ```
 
 The `--yolo` flag lets Gemini execute shell commands without prompting for confirmation — suitable for CI pipelines.
-
----
-
-## Console Output
-
-```text
-╔══════════════════════════════════════════╗
-║    🚀  Smart HTML Template Mailer        ║
-╚══════════════════════════════════════════╝
-
-────────────────────────────────────────────
-  Template: demo_template.html
-────────────────────────────────────────────
-  ℹ  Variables : 19
-  ℹ  Flags     : 2
-  ℹ  Loops     : 1
-  ℹ  Variants  : 4
-  ⚠  Dry-run mode — no emails will be sent
-
-────────────────────────────────────────────
-  Dispatching
-────────────────────────────────────────────
-  ✔  [1/4] ON:is_premium+show_banner
-  ✔  [2/4] ON:is_premium | OFF:show_banner
-  ✔  [3/4] ON:show_banner | OFF:is_premium
-  ✔  [4/4] OFF:is_premium+show_banner
-
-  Result  sent=4  failed=0  time=0.01s
-```
 
 <img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
@@ -294,31 +298,57 @@ Fires each rendered variant over Gmail's SMTP server (`smtp.gmail.com:587`) usin
 <img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## Project Structure
+```
+gmail-html-tester/
+├── src/
+│   └── gmail_html_tester/
+│       ├── **init**.py
+│       ├── cli.py             # Entry point and CLI argument parsing
+│       ├── config.py          # Configuration loading and management
+│       ├── generator.py       # Data generation engine
+│       ├── parser.py          # Jinja2 AST traversal and token extraction
+│       ├── smtp.py            # SMTP connection and email dispatching
+│       ├── utils.py           # Core shared utility functions
+│       ├── mcp/               # Model Context Protocol (MCP) integration
+│       │   ├── **init**.py
+│       │   ├── app.py         # MCP application initialization
+│       │   ├── server.py      # MCP server core logic
+│       │   └── tools.py       # LLM-facing tool definitions
+│       └── mock/              # Mocking data engine
+│           ├── **init**.py
+│           ├── constants.py   # Fallback schemas and semantic constants
+│           ├── mocks.py       # Faker data generation logic
+│           └── utils.py       # Mocking helper functions
+├── templates/
+│   └── email_template.html    # Reference/sample HTML email template
+├── tests/                     # Unit and integration tests
+├── GEMINI.md                  # LLM context / instruction guide
+├── LICENSE                    # Project license
+├── main.py                    # Root script convenience entry point
+├── mcp_server.py              # Dedicated entry point for the MCP server
+├── pyproject.toml             # Project metadata and dependencies (PEP 621)
+├── README.md                  # Project documentation
+└── uv.lock                    # Locked dependency tree managed by uv
 
 ```
-gmail-template-tester/
-├── main.py          # Entry point and CLI argument handling
-├── parser.py        # Jinja2 AST traversal and token extraction
-├── mocker.py        # Semantic data generation for detected variables
-├── permuter.py      # Conditional branch permutation logic
-├── mailer.py        # SMTP connection and email dispatch
-├── .env             # Your credentials (not committed)
-├── .env.example     # Example config for onboarding
-├── .gitignore
-└── README.md
-```
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## Configuration Reference
 
-| Variable | Required | Description |
-|---|---|---|
-| `SENDER_EMAIL` | Yes | Gmail address used to send test emails |
-| `APP_PASSWORD` | Yes | 16-character Gmail App Password |
-| `RECEIVER_EMAIL` | Yes | Address where test variants are delivered |
+The application relies on environment variables for authentication, SMTP routing, and LLM features. Create a `.env` file in the root directory based on the reference below:
 
----
+### Environment Variables
+
+| Variable | Required | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `SENDER_EMAIL` | **Yes** | *None* | The Gmail address used to dispatch test emails. |
+| `APP_PASSWORD` | **Yes** | *None* | A 16-character Google App Password (not your standard password). |
+| `RECEIVER_EMAIL` | **Yes** | *None* | The destination address where test email variants are delivered. |
+| `USE_GEMINI` | No | `false` | Set to `true` to enable LLM-powered context generation for templates. |
+| `GEMINI_API_KEY` | No* | *None* | API key for Gemini. *Required if `USE_GEMINI` is set to `true`*. |
+
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## CLI Reference
 
@@ -333,7 +363,7 @@ Options:
   --help                Show this help message
 ```
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## Template Compatibility
 
@@ -361,7 +391,7 @@ Hello {{ first_name }},
 
 > Nested conditionals and nested loops are supported. Each nesting level compounds the permutation count, so templates with 4+ conditionals may produce a large number of variants. Use `--dry-run` to preview first.
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## Security Notes
 
@@ -370,7 +400,7 @@ Hello {{ first_name }},
 - The tool connects over TLS (`STARTTLS`) — credentials are never transmitted in plaintext.
 - Test emails are sent only to the `RECEIVER_EMAIL` address you specify, regardless of any email addresses present in the template.
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## Troubleshooting
 
@@ -389,7 +419,7 @@ Templates with many conditionals generate exponentially more emails. Use `--dry-
 **Gemini CLI not running the script correctly**
 Make sure you're running the Gemini CLI session from inside the project directory so it can resolve relative template paths. If Gemini halts before executing, add `--yolo` to skip confirmation prompts.
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## Contributing
 
@@ -401,12 +431,12 @@ Make sure you're running the Gemini CLI session from inside the project director
 
 Please keep the codebase comment-free as a matter of style — the code is the documentation.
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## License
 
 MIT License. See `LICENSE` for details.
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 *Built to save developers time, frustration, and inbox clutter.*
