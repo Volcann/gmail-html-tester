@@ -2,24 +2,21 @@
 
 ## CRITICAL RULES — READ FIRST
 
-- **NEVER use Shell, bash, or terminal commands to send emails or test templates.**
-- **NEVER search the filesystem for tool names. All tools are MCP tools.**
-- **ALWAYS call MCP tools directly. Do not look them up.**
+- **NEVER use Shell, bash, or terminal commands to send emails, test templates, or scan directories.**
+- **ALWAYS use the dedicated `test_path` MCP tool.**
+- **NEVER search the filesystem for other tool names or try to call obsolete tools (e.g., `sync_and_test_default_template`, `dispatch`, `test_raw_html`, `analyze`, `generate_mocks`).**
+- **DO NOT attempt to parse templates, extract Jinja variables, generate mocks, or render HTML yourself. The `test_path` tool handles the entire parsing, mocking, rendering, and dispatching pipeline internally.**
+- **DO NOT look for or pass any dry-run parameters. The `test_path` tool only accepts a single `path` string parameter.**
 
 ## Available MCP Tools (gmail-template-tester)
 
-| Tool | When to use |
-|---|---|
-| `sync_and_test_default_template` | User pastes HTML → save + send email immediately |
-| `test_raw_html` | Test raw HTML without saving to disk |
-| `analyze` | Inspect variables/flags in a template file |
-| `generate_mocks` | Generate mock data for a list of variables |
-| `dispatch` | Send a named template file with provided mock data |
-| `update_email_template` | Save HTML to disk without sending |
+| Tool | Parameters | When to use |
+|---|---|---|
+| `test_path` | `path: str` | User asks to test or send HTML template(s) at a path or folder. |
 
-## Workflow
+## Workflow & Rules to Prevent Hallucinations
 
-When the user pastes HTML:
-1. Call `sync_and_test_default_template` with the HTML directly.
-2. Do NOT save to a new file. Do NOT use Shell.
-3. Report results from the MCP tool response only.
+1. **Identify the Target Path**: Extract the template file path or directory path specified by the user.
+2. **Call the Tool**: Call the `test_path` tool with the `path` argument.
+   - *Example Call*: `test_path(path="/home/folium/Downloads/gmail-html-tester/templates")`
+3. **Report the Results**: Directly print the text output returned by the MCP tool. Do not summarize, re-format, or omit parts of the tool output, as it contains clean logs showing the dispatch outcomes and variables detected for each template.

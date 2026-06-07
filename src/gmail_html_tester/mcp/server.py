@@ -1,5 +1,6 @@
-from .app import mcp
+from .app import app
+from . import tools
 
 
 def run_server():
-    mcp.run(transport="stdio")
+    app.run(transport="stdio")

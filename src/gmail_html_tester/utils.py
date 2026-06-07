@@ -1,3 +1,4 @@
+import os
 import time
 
 _RESET = "\033[0m"
@@ -54,3 +55,21 @@ class Timer:
 
     def elapsed(self) -> float:
         return time.monotonic() - self._start
+
+
+def get_html_templates(path: str) -> list[str]:
+    if os.path.isfile(path):
+        if path.lower().endswith('.html'):
+            return [path]
+        return []
+
+    if os.path.isdir(path):
+        html_files = []
+        for dirpath, _, filenames in os.walk(path):
+            for file_name in filenames:
+                if file_name.lower().endswith('.html'):
+                    full_path = os.path.join(dirpath, file_name)
+                    html_files.append(full_path)
+        return html_files
+
+    return []
