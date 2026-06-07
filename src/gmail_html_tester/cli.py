@@ -1,7 +1,6 @@
 import os
 import sys
 import argparse
-
 from jinja2 import Environment, FileSystemLoader
 
 from gmail_html_tester.config import settings
@@ -53,19 +52,26 @@ def _load_env_credentials():
     )
 
 
-def run() -> None:
+def run(template_path: str | None = None, dry_run: bool = False) -> None:
     print_banner()
-    args = _build_arg_parser().parse_args()
+    if template_path is not None:
+        target_template = template_path
+        is_dry_run = dry_run
+    else:
+        args = _build_arg_parser().parse_args()
+        target_template = args.template
+        is_dry_run = args.dry_run
+
     sender, password, receiver, use_gemini = _load_env_credentials()
 
-    if not args.dry_run and not all([sender, password, receiver]):
+    if not is_dry_run and not all([sender, password, receiver]):
         print_err(
             "Missing .env values: "
             "SENDER_EMAIL, APP_PASSWORD, RECEIVER_EMAIL"
         )
         sys.exit(1)
 
-    t_path = os.path.abspath(args.template)
+    t_path = os.path.abspath(target_template)
     if not os.path.isfile(t_path):
         print_err(f"Template not found: {t_path}")
         sys.exit(1)
@@ -105,7 +111,7 @@ def run() -> None:
     print_info(f"Loops     : {len(for_loops)}")
     print_info(f"Variants  : {len(variants)}")
 
-    if args.dry_run:
+    if is_dry_run:
         print_warn("Dry-run mode — no emails will be sent")
 
     print_section("Dispatching")
@@ -116,7 +122,7 @@ def run() -> None:
     for i, (label, ctx) in enumerate(variants, 1):
         v_subj = f"{subject} [{i}/{total}: {label}]"
         html = env.get_template(t_name).render(**ctx)
-        if args.dry_run:
+        if is_dry_run:
             print(f"\n--- VARIANT: {label} ---")
             print(f"Subject: {v_subj}")
             print(html)
@@ -128,7 +134,7 @@ def run() -> None:
         password,
         receiver,
         payloads,
-        args.dry_run
+        is_dry_run
     )
 
     sent = 0
