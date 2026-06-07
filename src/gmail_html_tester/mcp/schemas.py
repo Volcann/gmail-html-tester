@@ -14,9 +14,13 @@ class MockReq(BaseModel):
         ...,
         description="Variables from Jinja2 AST.",
     )
-    ctx: str = Field(
-        "generic",
-        description="Context hint (e.g., SaaS).",
+    use_gemini: bool = Field(
+        default=False,
+        description="If true, use Gemini API to generate contextual mocks.",
+    )
+    gemini_api_key: str | None = Field(
+        default=None,
+        description="Gemini API key (falls back to GEMINI_API_KEY env var).",
     )
 
 
@@ -53,4 +57,14 @@ class UpdateTemplateReq(BaseModel):
     html: str = Field(
         ...,
         description="The raw HTML string to save to the default templates/email_template.html file.",
+    )
+
+class SyncAndTestReq(BaseModel):
+    html: str = Field(
+        ...,
+        description="The raw HTML string to save and test.",
+    )
+    subject: str = Field(
+        default="[MCP] Default Test",
+        description="Email subject.",
     )

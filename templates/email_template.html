@@ -2,296 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Premium Account Update</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Youth funds are sitting unspent this month</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #f8fafc;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            color: #1e293b;
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .wrapper {
-            background-color: #f8fafc;
-            padding: 40px 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-        }
-        .header {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            padding: 48px 32px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            color: #ffffff;
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: -0.025em;
-        }
-        .header p {
-            margin: 8px 0 0 0;
-            color: #e0e7ff;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        .content {
-            padding: 40px 32px;
-        }
-        .greeting {
-            font-size: 20px;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 16px;
-        }
-        .intro-text {
-            font-size: 15px;
-            color: #475569;
-            margin-bottom: 24px;
-        }
-        .badge-premium {
-            display: inline-flex;
-            align-items: center;
-            background-color: #f5f3ff;
-            color: #7c3aed;
-            padding: 6px 14px;
-            border-radius: 9999px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-        .badge-standard {
-            display: inline-flex;
-            align-items: center;
-            background-color: #f1f5f9;
-            color: #475569;
-            padding: 6px 14px;
-            border-radius: 9999px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-        .banner {
-            background-color: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 28px;
-        }
-        .banner h3 {
-            margin: 0 0 4px 0;
-            color: #166534;
-            font-size: 15px;
-            font-weight: 700;
-        }
-        .banner p {
-            margin: 0;
-            color: #1e7040;
-            font-size: 14px;
-        }
-        .section-title {
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #64748b;
-            margin-bottom: 12px;
-            margin-top: 24px;
-        }
-        .item-table th {
-            text-align: left;
-            padding: 8px 12px;
-            font-size: 12px;
-            font-weight: 700;
-            color: #64748b;
-            border-bottom: 1px solid #e2e8f0;
-            text-transform: uppercase;
-        }
-        .item-table td {
-            padding: 12px;
-            font-size: 14px;
-            color: #334155;
-            border-bottom: 1px solid #f1f5f9;
-        }
-        .item-name {
-            font-weight: 600;
-            color: #0f172a;
-        }
-        .item-meta {
-            font-size: 12px;
-            color: #64748b;
-        }
-        .price-align {
-            text-align: right;
-        }
-        .totals-section {
-            margin-top: 16px;
-            border-top: 2px solid #e2e8f0;
-            padding-top: 16px;
-        }
-        .totals-row td {
-            padding: 6px 12px;
-            font-size: 14px;
-            color: #475569;
-        }
-        .totals-row.grand-total td {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0f172a;
-            padding-top: 12px;
-        }
-        .cta-container {
-            text-align: center;
-            margin: 32px 0 16px 0;
-        }
-        .btn-primary {
-            display: inline-block;
-            background-color: #4f46e5;
-            color: #ffffff;
-            text-decoration: none;
-            padding: 14px 32px;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
-        }
-        .btn-secondary {
-            display: inline-block;
-            background-color: #f8fafc;
-            color: #4f46e5;
-            border: 1px solid #e2e8f0;
-            text-decoration: none;
-            padding: 12px 28px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-        .footer {
-            background-color: #f1f5f9;
-            padding: 32px;
-            text-align: center;
-            border-top: 1px solid #e2e8f0;
-        }
-        .footer p {
-            margin: 4px 0;
-            font-size: 12px;
-            color: #64748b;
-        }
-        .footer a {
-            color: #4f46e5;
-            text-decoration: none;
-            font-weight: 500;
-        }
+        * { font-family: "Gill Sans", "Helvetica Neue", Helvetica, Arial, sans-serif; line-height: 24px; }
         @media only screen and (max-width: 600px) {
-            .content {
-                padding: 32px 20px;
-            }
-            .header {
-                padding: 36px 20px;
-            }
+            table { max-width: 100% !important; }
+            .content-td { padding: 20px !important; }
         }
     </style>
 </head>
-<body>
-    <div class="wrapper">
-        <div class="container">
-            <div class="header">
-                <h1>{{ company_name }}</h1>
-                <p>Premium Service Update</p>
-            </div>
-            <div class="content">
-                <div class="greeting">Hello {{ full_name }},</div>
-                <div class="intro-text">
-                    {{ message }}
+<body style="margin: 0; padding: 0; width: 100%; background-color: #f9f9f9; -webkit-font-smoothing: antialiased;">
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="center" style="padding: 40px 10px;">
+                <div style="margin-bottom: 24px;">
+                    <img src="https://seedfunds-project.s3.us-west-1.amazonaws.com/misc-images/SF.png" alt="SeedFunds Logo" width="120" style="display: block; margin: 0 auto; border: 0;">
                 </div>
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" style="max-width: 100%; background-color: #ffffff; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden;">
+                    <tr>
+                        <td class="content-td" style="padding: 40px;">
+                            <h1 style="margin: 0 0 16px; font-size: 28px; font-weight: 600; text-align: center; color: #1a2b3b; line-height: 34px;">
+                                Youth funds are sitting<br>unspent this month
+                            </h1>
+                            <p style="margin: 0 0 24px; font-size: 16px; color: #4b5563; text-align: center;">
+                                Hey {{ first_name }}, just a heads up — your students still have unspent funds this month and the month is ticking. Each youth has a monthly allowance that resets at the end of the month, and any unspent funds are lost.
+                            </p>
+                            
+                            <div style="background-color: #fef3c7; border-radius: 8px; padding: 24px; text-align: center; margin-bottom: 24px; border: 1px solid #fde68a;">
+                                <span style="font-size: 13px; text-transform: uppercase; color: #b45309; font-weight: bold; letter-spacing: 0.05em;">Total Youth Balance Available</span>
+                                <h2 style="margin: 8px 0 0; font-size: 38px; color: #92400e; font-weight: 700;">{{ unspent_funds }} coins</h2>
+                            </div>
 
-                {% if is_premium %}
-                <div class="badge-premium">
-                    ✦ Premium Member (Active)
-                </div>
-                {% else %}
-                <div class="badge-standard">
-                    ✧ Standard Member
-                </div>
-                {% endif %}
+                            <p style="margin: 0 0 24px; font-size: 15px; color: #4b5563; text-align: center;">
+                                Log in now and let's find something great for your {{ youth_count }} active Youth(s) before it resets.
+                            </p>
 
-                {% if show_banner %}
-                <div class="banner">
-                    <h3>🎁 Special Offer Just For You</h3>
-                    <p>Upgrade or extend your current license today and save up to {{ percentage }} using promo code <strong>{{ promo_code }}</strong> at checkout!</p>
-                </div>
-                {% endif %}
-
-                <div class="section-title">Order Details ({{ order_id }})</div>
-                <table class="item-table">
-                    <thead>
-                        <tr>
-                            <th>Item Description</th>
-                            <th class="price-align">Qty</th>
-                            <th class="price-align">Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in order_items %}
-                        <tr>
-                            <td>
-                                <div class="item-name">{{ item.name }}</div>
-                                <div class="item-meta">SKU: {{ item.sku }}</div>
-                            </td>
-                            <td class="price-align">{{ item.quantity }}</td>
-                            <td class="price-align item-name">{{ item.price }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-
-                <table class="totals-section">
-                    <tr class="totals-row">
-                        <td style="width: 70%;">Subtotal</td>
-                        <td class="price-align" style="width: 30%;">{{ subtotal }}</td>
-                    </tr>
-                    <tr class="totals-row">
-                        <td>Tax &amp; Fees</td>
-                        <td class="price-align">{{ tax }}</td>
-                    </tr>
-                    <tr class="totals-row grand-total">
-                        <td>Total Amount Paid</td>
-                        <td class="price-align">{{ total }}</td>
+                            <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 30px auto;">
+                                <tr>
+                                    <td align="center" bgcolor="#005a32" style="border-radius: 6px;">
+                                        <a href="https://stage.dbv53shy48z44.amplifyapp.com/dashboard" target="_blank" style="display: inline-block; padding: 14px 30px; font-weight: 700; color: #ffffff; text-decoration: none; font-size: 16px;">Book Activities Now →</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <p style="margin: 40px 0 0; font-size: 15px; color: #4b5563; text-align: center;">
+                                Thanks for all you do,<br><strong>The SeedFunds Team</strong>
+                            </p>
+                        </td>
                     </tr>
                 </table>
-
-                <div class="cta-container">
-                    <a href="{{ cta_url }}" class="btn-primary">{{ cta_text }}</a>
-                    <br>
-                    {% if not is_premium %}
-                    <a href="{{ upgrade_url }}" class="btn-secondary">Explore Premium Benefits</a>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="footer">
-                <p>&copy; {{ year }} {{ company_name }}. All rights reserved.</p>
-                <p>Located at {{ address }}</p>
-                <p>You received this email because you registered on our platform.</p>
-                <p>
-                    <a href="{{ settings_url }}">Manage Preferences</a> &bull; 
-                    <a href="{{ unsubscribe_url }}">Unsubscribe</a>
+                <p style="margin: 24px auto; max-width: 500px; font-size: 12px; color: #9ca3af; text-align: center; line-height: 18px;">
+                    You are receiving this because you registered on SeedFunds.<br>
+                    <a href="{{ unsubscribe_url }}" style="color: #2563eb; font-weight: bold; text-decoration: underline;">Unsubscribe</a><br>
+                    © {{ year }} SeedFunds. All rights reserved.
                 </p>
-            </div>
-        </div>
-    </div>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "fastmcp>=3.4.2",
+    "google-genai>=2.8.0",
     "jinja2",
     "mcp>=1.27.2",
     "pydantic>=2.13.4",
@@ -13,7 +14,7 @@ dependencies = [
 ]
 
 [project.scripts]
-gmail-tester = "gmail_html_tester.cli:run"
+_internal-gmail-cli = "gmail_html_tester.cli:run"
 
 [build-system]
 requires = ["hatchling"]

@@ -9,13 +9,15 @@ from .schemas import (
     DispatchReq,
     TestHtmlReq,
     UpdateTemplateReq,
+    SyncAndTestReq,
 )
 from gmail_html_tester.parser import (
     extract_for_loops,
     extract_if_flags,
     get_all_variables,
 )
-from gmail_html_tester.mock import build_mock_context, get_mock_value
+from gmail_html_tester.mock import build_mock_context, get_mock_value, build_ai_mocks
+from gmail_html_tester.config import settings
 from gmail_html_tester.generator import build_variants
 from gmail_html_tester.smtp import send_email, send_emails_bulk
 
@@ -51,6 +53,8 @@ def analyze(req: AnalyzeReq) -> dict[str, Any]:
 
 @mcp.tool()
 def generate_mocks(req: MockReq) -> dict[str, Any]:
+    if req.use_gemini:
+        return {"mocks": build_ai_mocks(req.vars, api_key=req.gemini_api_key or settings.gemini_api_key)}
     return {"mocks": {v: get_mock_value(v) for v in req.vars}}
 
 
@@ -140,3 +144,14 @@ def update_email_template(req: UpdateTemplateReq) -> dict[str, Any]:
         return {"ok": True, "path": path}
     except Exception as e:
         return {"err": str(e)}
+
+@mcp.tool()
+def sync_and_test_default_template(req: SyncAndTestReq) -> dict[str, Any]:
+    path = os.path.join(os.getcwd(), "templates", "email_template.html")
+    if not os.path.exists(os.path.dirname(path)):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(req.html)
+
+    test_req = TestHtmlReq(html=req.html, subject=req.subject, dry_run=False)
+    return test_raw_html(test_req)
