@@ -1,7 +1,7 @@
 import json
-import os
 from google import genai
 
+from gmail_html_tester.config import settings
 from .utils import build_loop_collection, get_mock_value
 
 
@@ -28,7 +28,7 @@ def build_ai_mocks(
     variables: list[str],
     api_key: str | None = None,
 ) -> dict[str, str]:
-    key = api_key or os.getenv("GEMINI_API_KEY")
+    key = api_key or settings.gemini_api_key
     if not key:
         return {v: get_mock_value(v) for v in variables}
 

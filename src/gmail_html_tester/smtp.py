@@ -29,6 +29,7 @@ def send_email(
         server.login(sender, app_password)
         server.send_message(msg)
 
+
 def send_emails_bulk(
     sender: str,
     app_password: str,
@@ -36,17 +37,16 @@ def send_emails_bulk(
     payloads: list[tuple[str, str]],
     dry_run: bool = False,
 ) -> list[Exception | None]:
-    """Sends multiple emails reusing a single secure SMTP connection."""
     if dry_run or not payloads:
         return [None] * len(payloads)
-        
+
     results = []
     try:
         with smtplib.SMTP(_SMTP_HOST, _SMTP_PORT) as server:
             server.ehlo()
             server.starttls()
             server.login(sender, app_password)
-            
+
             for subject, html_body in payloads:
                 try:
                     msg = MIMEMultipart("alternative")
@@ -60,5 +60,5 @@ def send_emails_bulk(
                     results.append(e)
     except Exception as server_err:
         return [server_err] * len(payloads)
-        
+
     return results

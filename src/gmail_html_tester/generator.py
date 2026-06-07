@@ -17,7 +17,7 @@ def build_variants(base_ctx: dict, if_flags: list) -> list:
         on_flags = []
         off_flags = []
 
-        for flag, value in zip(if_flags, combo):
+        for flag, value in zip(if_flags, combo, strict=True):
             if value:
                 ctx[flag] = base_ctx.get(flag, True)
                 on_flags.append(flag)
