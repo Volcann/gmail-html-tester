@@ -25,7 +25,7 @@ def print_err(msg: str) -> None:
 
 
 def print_info(msg: str) -> None:
-    print(f"  {_CYAN}ℹ{_RESET}  {msg}")
+    print(f"  {_CYAN}ℹ{_RESET}  {msg}")  # noqa: RUF001
 
 
 def print_warn(msg: str) -> None:
@@ -59,7 +59,7 @@ class Timer:
 
 def get_html_templates(path: str) -> list[str]:
     if os.path.isfile(path):
-        if path.lower().endswith('.html'):
+        if path.lower().endswith(".html"):
             return [path]
         return []
 
@@ -67,7 +67,7 @@ def get_html_templates(path: str) -> list[str]:
         html_files = []
         for dirpath, _, filenames in os.walk(path):
             for file_name in filenames:
-                if file_name.lower().endswith('.html'):
+                if file_name.lower().endswith(".html"):
                     full_path = os.path.join(dirpath, file_name)
                     html_files.append(full_path)
         return html_files

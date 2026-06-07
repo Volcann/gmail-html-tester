@@ -1,7 +1,9 @@
 import json
+
 from google import genai
 
 from gmail_html_tester.config import settings
+
 from .utils import build_loop_collection, get_mock_value
 
 

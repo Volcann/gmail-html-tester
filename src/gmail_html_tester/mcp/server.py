@@ -1,5 +1,5 @@
+from . import tools  # noqa: F401
 from .app import app
-from . import tools
 
 
 def run_server():

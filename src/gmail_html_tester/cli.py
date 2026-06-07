@@ -1,6 +1,7 @@
+import argparse
 import os
 import sys
-import argparse
+
 from jinja2 import Environment, FileSystemLoader
 
 from gmail_html_tester.config import settings
@@ -36,7 +37,8 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         help="Path to a Jinja2 HTML template file.",
     )
     p.add_argument(
-        "--dry-run", "-d",
+        "--dry-run",
+        "-d",
         action="store_true",
         help="Render variants to stdout without sending.",
     )
@@ -65,10 +67,7 @@ def run(template_path: str | None = None, dry_run: bool = False) -> None:
     sender, password, receiver, use_gemini = _load_env_credentials()
 
     if not is_dry_run and not all([sender, password, receiver]):
-        print_err(
-            "Missing .env values: "
-            "SENDER_EMAIL, APP_PASSWORD, RECEIVER_EMAIL"
-        )
+        print_err("Missing .env values: " "SENDER_EMAIL, APP_PASSWORD, RECEIVER_EMAIL")
         sys.exit(1)
 
     t_path = os.path.abspath(target_template)
@@ -92,7 +91,8 @@ def run(template_path: str | None = None, dry_run: bool = False) -> None:
 
     if use_gemini:
         scalar_vars = [
-            v for v in all_vars
+            v
+            for v in all_vars
             if v not in {coll for _, coll in for_loops}
             and v not in {item for item, _ in for_loops}
             and v not in if_flags
@@ -129,19 +129,11 @@ def run(template_path: str | None = None, dry_run: bool = False) -> None:
             print("-" * 40)
         payloads.append((v_subj, html))
 
-    errors = send_emails_bulk(
-        sender,
-        password,
-        receiver,
-        payloads,
-        is_dry_run
-    )
+    errors = send_emails_bulk(sender, password, receiver, payloads, is_dry_run)
 
     sent = 0
     failed = 0
-    for i, ((label, _), err) in enumerate(
-        zip(variants, errors, strict=True), 1
-    ):
+    for i, ((label, _), err) in enumerate(zip(variants, errors, strict=True), 1):
         if err is None:
             print_ok(f"[{i}/{total}] {label}")
             sent += 1

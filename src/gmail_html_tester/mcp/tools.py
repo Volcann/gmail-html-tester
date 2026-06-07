@@ -38,13 +38,10 @@ async def test_path(path: str) -> str:
 
     python_bin = sys.executable
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    main_py = os.path.abspath(
-        os.path.join(current_dir, "..", "..", "..", "main.py")
-    )
+    main_py = os.path.abspath(os.path.join(current_dir, "..", "..", "..", "main.py"))
 
     tasks = [
-        run_template_process(python_bin, main_py, tpl)
-        for tpl in sorted(templates)
+        run_template_process(python_bin, main_py, tpl) for tpl in sorted(templates)
     ]
     outputs = await asyncio.gather(*tasks)
 

@@ -3,9 +3,22 @@ import string
 from datetime import datetime, timedelta
 
 from .constants import (
-    BADGE_LABELS, BASE_URLS, CATEGORIES, CITIES, COMPANIES,
-    CTA_TEXTS, CURRENCIES, DOMAINS, FIRST_NAMES, LAST_NAMES,
-    PLAN_NAMES, PRODUCTS, ROLES, SCHOOLS, STATUSES, SUPPORT_EMAILS,
+    BADGE_LABELS,
+    BASE_URLS,
+    CATEGORIES,
+    CITIES,
+    COMPANIES,
+    CTA_TEXTS,
+    CURRENCIES,
+    DOMAINS,
+    FIRST_NAMES,
+    LAST_NAMES,
+    PLAN_NAMES,
+    PRODUCTS,
+    ROLES,
+    SCHOOLS,
+    STATUSES,
+    SUPPORT_EMAILS,
 )
 
 
@@ -32,22 +45,22 @@ def token() -> str:
 def url(path_key: str = "dashboard") -> str:
     base = random.choice(BASE_URLS)
     paths = {
-        "login":      "/auth/login",
-        "signup":     "/auth/register",
-        "dashboard":  "/dashboard",
-        "settings":   "/settings/profile",
-        "billing":    "/settings/billing",
-        "upgrade":    "/upgrade?ref=email",
-        "confirm":    f"/confirm?token={token()}",
-        "reset":      f"/auth/reset-password?token={token()}",
+        "login": "/auth/login",
+        "signup": "/auth/register",
+        "dashboard": "/dashboard",
+        "settings": "/settings/profile",
+        "billing": "/settings/billing",
+        "upgrade": "/upgrade?ref=email",
+        "confirm": f"/confirm?token={token()}",
+        "reset": f"/auth/reset-password?token={token()}",
         "unsubscribe": f"/unsubscribe?uid={token()[:16]}",
-        "invoice":    f"/invoices/{invoice_id()}",
-        "order":      f"/orders/{order_id()}",
-        "track":      f"/shipping/track?id={order_id()}",
-        "profile":    "/profile/edit",
-        "help":       "/help",
-        "privacy":    "/legal/privacy",
-        "terms":      "/legal/terms",
+        "invoice": f"/invoices/{invoice_id()}",
+        "order": f"/orders/{order_id()}",
+        "track": f"/shipping/track?id={order_id()}",
+        "profile": "/profile/edit",
+        "help": "/help",
+        "privacy": "/legal/privacy",
+        "terms": "/legal/terms",
     }
     return base + paths.get(path_key, "/")
 
@@ -95,29 +108,31 @@ def get_mock_value(var_name: str) -> str:
 
     _url_map = {
         "unsubscribe": ["unsubscribe_url", "unsubscribe_link"],
-        "login":       ["login_url", "signin_url", "sign_in_url"],
-        "signup":      ["signup_url", "register_url"],
-        "dashboard":   [
+        "login": ["login_url", "signin_url", "sign_in_url"],
+        "signup": ["signup_url", "register_url"],
+        "dashboard": [
             "dashboard_url",
             "dashboard_link",
             "cta_url",
             "action_url",
-            "button_url"
+            "button_url",
         ],
-        "billing":     ["billing_url", "billing_link"],
-        "upgrade":     ["upgrade_url", "upgrade_link"],
-        "confirm":     [
+        "billing": ["billing_url", "billing_link"],
+        "upgrade": ["upgrade_url", "upgrade_link"],
+        "confirm": [
             "confirm_url",
-            "confirmation_url", "verify_url", "verification_url"
+            "confirmation_url",
+            "verify_url",
+            "verification_url",
         ],
-        "reset":       ["reset_url", "reset_link", "password_reset"],
-        "invoice":     ["invoice_url", "invoice_link"],
-        "order":       ["order_url", "order_link"],
-        "track":       ["track_url", "tracking_url", "tracking_link"],
-        "profile":     ["profile_url", "profile_link"],
-        "help":        ["help_url", "help_link", "support_url"],
-        "privacy":     ["privacy_url", "privacy_link"],
-        "terms":       ["terms_url", "terms_link"],
+        "reset": ["reset_url", "reset_link", "password_reset"],
+        "invoice": ["invoice_url", "invoice_link"],
+        "order": ["order_url", "order_link"],
+        "track": ["track_url", "tracking_url", "tracking_link"],
+        "profile": ["profile_url", "profile_link"],
+        "help": ["help_url", "help_link", "support_url"],
+        "privacy": ["privacy_url", "privacy_link"],
+        "terms": ["terms_url", "terms_link"],
     }
     for path_key, patterns in _url_map.items():
         if any(x in n for x in patterns):
@@ -125,21 +140,36 @@ def get_mock_value(var_name: str) -> str:
     if any(x in n for x in ["url", "link", "href"]):
         return url("dashboard")
 
-    if any(x in n for x in [
-        "company_name", "company", "org_name", "organisation", "organization"
-    ]):
+    if any(
+        x in n
+        for x in ["company_name", "company", "org_name", "organisation", "organization"]
+    ):
         return random.choice(COMPANIES)
     if "school" in n:
         return random.choice(SCHOOLS)
     if "brand" in n:
         return random.choice(COMPANIES)
 
-    if any(x in n for x in [
-        "price", "amount", "cost", "total", "subtotal",
-        "tax", "fee", "charge", "balance", "refund",
-        "discount_amount", "savings", "plan_price",
-        "monthly_price", "annual_price"
-    ]):
+    if any(
+        x in n
+        for x in [
+            "price",
+            "amount",
+            "cost",
+            "total",
+            "subtotal",
+            "tax",
+            "fee",
+            "charge",
+            "balance",
+            "refund",
+            "discount_amount",
+            "savings",
+            "plan_price",
+            "monthly_price",
+            "annual_price",
+        ]
+    ):
         return price()
 
     if any(x in n for x in ["plan_name", "plan", "tier", "subscription"]):
@@ -209,24 +239,32 @@ def get_mock_value(var_name: str) -> str:
         return random.choice(CTA_TEXTS)
 
     if any(x in n for x in ["subject", "email_subject"]):
-        return random.choice([
-            "Your order is confirmed",
-            "Welcome aboard — let's get started",
-            "Action required on your account",
-        ])
+        return random.choice(
+            [
+                "Your order is confirmed",
+                "Welcome aboard — let's get started",
+                "Action required on your account",
+            ]
+        )
     if any(x in n for x in ["title", "heading", "headline"]):
-        return random.choice([
-            "Welcome to the Platform", "Your Account Has Been Created",
-            "Order Confirmed", "Invoice Ready",
-        ])
-    if any(x in n for x in [
-        "message", "body", "content", "intro", "description", "desc"
-    ]):
-        return random.choice([
-            "We're excited to have you on board. Everything is set up.",
-            "A quick heads-up about your account — please review the details.",
-            "Your request has been processed successfully.",
-        ])
+        return random.choice(
+            [
+                "Welcome to the Platform",
+                "Your Account Has Been Created",
+                "Order Confirmed",
+                "Invoice Ready",
+            ]
+        )
+    if any(
+        x in n for x in ["message", "body", "content", "intro", "description", "desc"]
+    ):
+        return random.choice(
+            [
+                "We're excited to have you on board. Everything is set up.",
+                "A quick heads-up about your account — please review the details.",
+                "Your request has been processed successfully.",
+            ]
+        )
     if any(x in n for x in ["tagline", "subtitle", "subheading"]):
         return "Simple, powerful, and built for teams."
     if any(x in n for x in ["note", "footnote", "footer_note"]):
@@ -270,10 +308,14 @@ def build_loop_collection(item_var: str) -> list:
 
     if any(x in item_var for x in ["feature", "benefit", "highlight"]):
         features = [
-            "Unlimited API calls", "Priority email support",
-            "Advanced analytics dashboard", "Custom domain support",
-            "Team collaboration tools", "SSO & SAML integration",
-            "99.9% uptime SLA", "Dedicated account manager",
+            "Unlimited API calls",
+            "Priority email support",
+            "Advanced analytics dashboard",
+            "Custom domain support",
+            "Team collaboration tools",
+            "SSO & SAML integration",
+            "99.9% uptime SLA",
+            "Dedicated account manager",
         ]
         return [
             {item_var: f} for f in random.sample(features, k=min(count, len(features)))
@@ -282,9 +324,9 @@ def build_loop_collection(item_var: str) -> list:
     if any(x in item_var for x in ["link", "nav_item", "menu_item"]):
         links = [
             {"label": "Dashboard", "url": url("dashboard")},
-            {"label": "Settings",  "url": url("settings")},
-            {"label": "Billing",   "url": url("billing")},
-            {"label": "Help",      "url": url("help")},
+            {"label": "Settings", "url": url("settings")},
+            {"label": "Billing", "url": url("billing")},
+            {"label": "Help", "url": url("help")},
         ]
         return [{item_var: lnk["label"], **lnk} for lnk in links[:count]]
 
@@ -295,11 +337,9 @@ def build_loop_collection(item_var: str) -> list:
             {
                 item_var: f"{first} {last}",
                 "role": random.choice(ROLES),
-                "email": email(first, last)
+                "email": email(first, last),
             }
             for _ in range(count)
         ]
 
-    return [
-        {item_var: get_mock_value(f"{item_var}_{i + 1}")} for i in range(count)
-    ]
+    return [{item_var: get_mock_value(f"{item_var}_{i + 1}")} for i in range(count)]

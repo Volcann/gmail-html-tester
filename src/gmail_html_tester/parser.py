@@ -3,27 +3,38 @@ import re
 from jinja2 import Environment, meta
 
 IF_BLOCK_RE = re.compile(
-    r'\{%-?\s*if\s+([^%]+?)\s*-?%\}',
+    r"\{%-?\s*if\s+([^%]+?)\s*-?%\}",
     re.IGNORECASE,
 )
 FOR_BLOCK_RE = re.compile(
-    r'\{%-?\s*for\s+(\w+)\s+in\s+(\w+)\s*-?%\}',
+    r"\{%-?\s*for\s+(\w+)\s+in\s+(\w+)\s*-?%\}",
     re.IGNORECASE,
 )
 
-_JINJA_KEYWORDS = frozenset([
-    "true", "false", "none", "null",
-    "not", "and", "or", "in", "is",
-    "loop", "super", "self",
-])
+_JINJA_KEYWORDS = frozenset(
+    [
+        "true",
+        "false",
+        "none",
+        "null",
+        "not",
+        "and",
+        "or",
+        "in",
+        "is",
+        "loop",
+        "super",
+        "self",
+    ]
+)
 
 
 def extract_if_flags(source: str) -> list:
     flags = []
     for match in IF_BLOCK_RE.finditer(source):
         expr = match.group(1).strip()
-        expr = re.sub(r'^not\s+', '', expr, flags=re.IGNORECASE).strip()
-        root = re.split(r'[\s=!<>.()\[\]]', expr)[0]
+        expr = re.sub(r"^not\s+", "", expr, flags=re.IGNORECASE).strip()
+        root = re.split(r"[\s=!<>.()\[\]]", expr)[0]
         if (
             root
             and root.isidentifier()

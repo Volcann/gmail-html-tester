@@ -1,5 +1,5 @@
-from fastmcp import FastMCP
 from dotenv import load_dotenv
+from fastmcp import FastMCP
 
 load_dotenv()
 
