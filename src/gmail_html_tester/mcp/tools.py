@@ -2,8 +2,9 @@ import asyncio
 import os
 import sys
 
-from .app import mcp
 from gmail_html_tester.utils import get_html_templates
+
+from .app import app
 
 
 async def run_template_process(python_bin: str, main_py: str, tpl_path: str) -> str:
@@ -29,14 +30,17 @@ async def run_template_process(python_bin: str, main_py: str, tpl_path: str) -> 
     return "\n".join(result)
 
 
-@mcp.tool()
+@app.tool()
 async def test_path(path: str) -> str:
     templates = get_html_templates(path)
     if not templates:
         return f"Error: No HTML templates found at path '{path}'."
 
     python_bin = sys.executable
-    main_py = os.path.join(os.getcwd(), "main.py")
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    main_py = os.path.abspath(
+        os.path.join(current_dir, "..", "..", "..", "main.py")
+    )
 
     tasks = [
         run_template_process(python_bin, main_py, tpl)

@@ -3,4 +3,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-mcp = FastMCP("Gmail-Template-Tester")
+app = FastMCP(
+    "Gmail-Template-Tester",
+)
