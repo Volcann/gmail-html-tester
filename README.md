@@ -13,17 +13,19 @@
   <a href="#license">
     <img alt="License" src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
   </a>
-  <a href="https://github.com/Mohsin/gmail-template-tester/stargazers">
+  <a href="https://github.com/Volcann/gmail-html-mailer/stargazers">
     <img alt="Stargazers" src="https://img.shields.io/github/stars/volcann/gmail-html-mailer?style=for-the-badge&logo=starship&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
   </a>
-  <a href="https://github.com/Mohsin/gmail-template-tester/graphs/contributors">
+  <a href="https://github.com/Volcann/gmail-html-mailer/graphs/contributors">
     <img alt="Contributors" src="https://img.shields.io/github/contributors/volcann/gmail-html-mailer?style=for-the-badge&logo=gitbook&color=B5E8E0&logoColor=D9E0EE&labelColor=302D41">
   </a>
-</p><br>
+</p>
 
 Stop wasting time triggering complex user flows just to see how a transactional email looks in your inbox. `gmail-template-tester` is an automated script that parses your Jinja2-style HTML templates, intelligently mocks the required data, and dispatches the final renders straight to your Gmail account — covering every conditional branch automatically.
 
----
+Now with **Gemini CLI integration**: pass template paths directly from your terminal in plain English and fire tests to your inbox without touching the Python script manually. Gemini CLI uses token caching to reduce API overhead, keeping your workflow lean.
+
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## The Problem
 
@@ -35,8 +37,6 @@ Testing an email template the traditional way means:
 4. Repeating for every `{% if %}` branch you need to cover
 
 This tool eliminates all of that. **Point it at a template file and it handles the rest.**
-
----
 
 ## Impact
 
@@ -51,18 +51,73 @@ This tool eliminates all of that. **Point it at a template file and it handles t
 - **Automated branch coverage** — every `{% if is_premium %}` produces a separate email automatically
 - **Zero-configuration mocking** — `{{ first_name }}` gets a real-sounding name; `{{ price }}` gets a realistic price
 - **60% reduction in QA time** for email template validation
+- **Gemini CLI shortcut** — describe your template path in plain English and let Gemini dispatch the test
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
+
+## ⚡ Choose Your Mode
+
+> Pick the workflow that fits you. Both modes do the same thing — send rendered email variants straight to your inbox.
+
+<table>
+<tr>
+<td width="50%" align="center">
+
+### 🐍 Without Gemini CLI
+
+```bash
+python main.py templates/welcome.html
+python main.py templates/invoice.html --dry-run
+```
+
+➡️ [Jump to Python Usage](#usage)
+
+</td>
+<td width="50%" align="center">
+
+### 🤖 With Gemini CLI
+
+```
+> Test templates/welcome.html and send to my inbox
+> Dry-run all templates in the templates/ folder
+```
+
+➡️ [Jump to Gemini CLI Setup](#gemini-cli-integration)
+
+</td>
+</tr>
+</table>
+
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
+
+## 📑 Navigation
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage) *(Python CLI)*
+- [Gemini CLI Integration](#gemini-cli-integration)
+- [Console Output](#console-output)
+- [How It Works](#how-it-works)
+- [Project Structure](#project-structure)
+- [Configuration Reference](#configuration-reference)
+- [CLI Reference](#cli-reference)
+- [Template Compatibility](#template-compatibility)
+- [Security Notes](#security-notes)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## Prerequisites
 
 - Python 3.7 or later
 - A Gmail account
 - A [Gmail App Password](https://support.google.com/accounts/answer/185833) (16 characters, generated from Google Account → Security → App Passwords)
+- *(Optional)* [Gemini CLI](https://github.com/google-gemini/gemini-cli) for natural-language template dispatching
 
 > **Note:** App Passwords require 2-Step Verification to be enabled on your Google account.
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## Installation
 
@@ -97,7 +152,7 @@ RECEIVER_EMAIL=where_to_send_tests@gmail.com
 
 > Keep your `.env` file out of version control. A `.gitignore` entry for `.env` is included in the repo.
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## Usage
 
@@ -128,9 +183,47 @@ python main.py templates/invoice.html --dry-run
 python main.py templates/order_shipped.html
 ```
 
-### Console Output
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
-When you run the tool, you will see a clean visual summary of the template analysis and variant dispatching:
+## Gemini CLI Integration
+
+You can drive this tool from [Gemini CLI](https://github.com/google-gemini/gemini-cli) — Google's open-source terminal AI agent — instead of invoking Python directly. This is useful when you want to test multiple templates in one go, or when you prefer a conversational interface over remembering CLI flags.
+
+**Why Gemini CLI?**
+
+Gemini CLI runs on Gemini 2.5 Pro with a 1M token context window and uses automatic token caching to avoid re-processing repeated context on every call. For a script like this — where you're firing the same setup repeatedly across different templates — that caching keeps things fast and cheap.
+
+**Install Gemini CLI**
+
+```bash
+npm install -g @google/gemini-cli
+# or run without installing:
+npx @google/gemini-cli
+```
+
+**Example prompts**
+
+Once inside a Gemini CLI session in your project directory:
+
+```
+> Test templates/welcome.html and send it to my inbox
+> Run a dry-run on templates/invoice.html and show me the output
+> Test all templates in the templates/ folder
+```
+
+Gemini CLI will resolve the template paths, run `main.py` with the appropriate arguments, and report back results — all without you writing a single command manually.
+
+**Headless / scripted usage**
+
+```bash
+echo "Test templates/order_shipped.html" | gemini --yolo
+```
+
+The `--yolo` flag lets Gemini execute shell commands without prompting for confirmation — suitable for CI pipelines.
+
+---
+
+## Console Output
 
 ```text
 ╔══════════════════════════════════════════╗
@@ -157,7 +250,7 @@ When you run the tool, you will see a clean visual summary of the template analy
   Result  sent=4  failed=0  time=0.01s
 ```
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## How It Works
 
@@ -198,7 +291,7 @@ Every branch is covered. Nothing hides.
 
 Fires each rendered variant over Gmail's SMTP server (`smtp.gmail.com:587`) using TLS and your App Password. All sends are logged to stdout with timing information.
 
----
+<img src="https://img.shields.io/badge/-007ACC?style=flat&line-height=1&width=1000" width="100%" height="3px">
 
 ## Project Structure
 
@@ -292,6 +385,9 @@ Check your network connection and confirm `smtp.gmail.com` is reachable on port 
 
 **Template produces too many variants**
 Templates with many conditionals generate exponentially more emails. Use `--dry-run` to inspect the count before sending. Consider restructuring templates with many independent conditions into separate files.
+
+**Gemini CLI not running the script correctly**
+Make sure you're running the Gemini CLI session from inside the project directory so it can resolve relative template paths. If Gemini halts before executing, add `--yolo` to skip confirmation prompts.
 
 ---
 
