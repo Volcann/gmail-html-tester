@@ -25,6 +25,17 @@ from gmail_html_tester.utils import (
 )
 
 
+def _capfirst(value: object) -> str:
+    text = str(value)
+    if not text:
+        return ""
+    return text[0].upper() + text[1:]
+
+
+def _register_template_filters(env: Environment) -> None:
+    env.filters["capfirst"] = _capfirst
+
+
 def _build_arg_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="gmail-mailer",
@@ -82,6 +93,7 @@ def run(template_path: str | None = None, dry_run: bool = False) -> None:
         loader=FileSystemLoader(t_dir),
         autoescape=False,
     )
+    _register_template_filters(env)
     source = env.loader.get_source(env, t_name)[0]
     all_vars = get_all_variables(env, t_name)
     if_flags = extract_if_flags(source)
